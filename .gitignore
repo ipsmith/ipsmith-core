@@ -7,5 +7,4 @@
 public/.htaccess
 public/.htpasswd
 ipsmith-core/libs/config.inc.php
-ipsmith-core/cache/templates/cache/*
-ipsmith-core/cache/templates/compile/*
+*.tpl.php
