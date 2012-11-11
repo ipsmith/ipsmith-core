@@ -34,7 +34,7 @@ $doctrineConnectionParams = array(
 
 $doctrineConnection = DriverManager::getConnection($doctrineConnectionParams, $doctrineConfig);
 
-require (LIB_DIR.'/dbps/BaseObject.dbo.php');
+require (LIB_DIR.'/dbos/BaseObject.dbo.php');
 
 require ( LIB_DIR  .'/ipsmith_autoload.php');
 require ( LIB_DIR  .'/helper_functions.php');
