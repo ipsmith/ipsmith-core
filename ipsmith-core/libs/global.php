@@ -1,31 +1,59 @@
 <?php
-define('LIB_DIR',dirname(__FILE__));
-define('IPS_DIR',LIB_DIR.'/..');
+define('LIB_DIR', dirname(__FILE__) );
+define('IPS_DIR', LIB_DIR.'/..' );
+define('LOG_DIR', IPS_DIR.'/logs' );
 
 date_default_timezone_set('Europe/Berlin');
 ini_set("display_errors", TRUE);
 error_reporting(E_ALL);// ^ E_NOTICE ^ E_WARNING);
-define('LOG_DIR',IPS_DIR.'/logs');
 
-include ( LIB_DIR  .'/config.inc.php');
+include ( LIB_DIR  .'/config.loader.php');
 
 require ( LIB_DIR . '/3rdparty/smarty/libs/Smarty.class.php');
 
-function ipsmith_autoload($class) {
-    include(LIB_DIR.'/classes/' . $class . '.class.php');
-}
-spl_autoload_register('ipsmith_autoload');
+use Doctrine\Common\ClassLoader,
+     Doctrine\DBAL\DriverManager,
+     Doctrine\DBAL as ORM;
 
+require LIB_DIR.'/3rdparty/doctrine-dbal/Doctrine/Common/ClassLoader.php';
+
+$classLoader = new ClassLoader('Doctrine', LIB_DIR.'/3rdparty/doctrine-dbal/');
+$classLoader->register();
+
+
+$doctrineConfig = new \Doctrine\DBAL\Configuration();
+
+$doctrineConfig->setSQLLogger(new \Doctrine\DBAL\Logging\EchoSQLLogger());
+$doctrineConnectionParams = array(
+    'dbname' => $config["db"]["name"],
+    'user' => $config["db"]["user"],
+    'password' => $config["db"]["pass"],
+    'host' => $config["db"]["host"],
+    'driver' => $config["db"]["driver"],
+);
+
+$doctrineConnection = DriverManager::getConnection($doctrineConnectionParams, $doctrineConfig);
+
+require (LIB_DIR.'/dbps/BaseObject.dbo.php');
+
+require ( LIB_DIR  .'/ipsmith_autoload.php');
+require ( LIB_DIR  .'/helper_functions.php');
+
+// Setup templating
 $smarty = new Smarty;
-$smarty->debugging = false;
-$smarty->caching = false;
-$smarty->cache_lifetime = 1;
-$smarty->force_compile = true;
+
+$smarty->debugging = $config["template"]["debugging"];
+$smarty->caching = $config["template"]["caching"];
+$smarty->force_compile = $config["template"]["force_compile"];
+$smarty->use_sub_dirs = $config["template"]["use_sub_dirs"];
+
+$smarty->cache_lifetime = $config["template"]["cache_lifetime"];
+
+$smarty->template_dir = IPS_DIR.'/templates';
 $smarty->cache_dir = IPS_DIR . '/cache/templates/caching';
 $smarty->compile_dir = IPS_DIR .'/cache/templates/compile';
-$smarty->use_sub_dirs = true;
-$smarty->template_dir = IPS_DIR.'/templates';
-session_name('ipsmith-dev');
+
+session_name($config["appidentifier"]);
 $sessionid = session_id();
 if(empty($sessionid))
 {
@@ -40,58 +68,7 @@ if(empty($sessionid))
 mysql_connect($config["db"]["host"],$config["db"]["user"],$config["db"]["pass"]);
 mysql_select_db($config["db"]["name"]);
 
-  function startsWith($check, $startStr) {
-        if (!is_string($check) || !is_string($startStr) || strlen($check)<strlen($startStr)) {
-            return false;
-        }
- 
-        return (substr($check, 0, strlen($startStr)) === $startStr);
-    }
-
-
 $translation = new TranslationManager($config);
 $translation->load();
-
-
-function parseRequest($request)
-{
-    global $req;
-
-    $vars = array('module','page','displaytype');
-
-    foreach($vars as $var)
-    {
-	    if(isset($request[$var]) && !is_null($request[$var]))
-    	{
-	    	$req[$var] = strtolower($request[$var]);
-        }
-    }
-
-   return $req;
-}
-
-
-function downloadUrl($url)
-{
-   $ch = curl_init ($url);
-    curl_setopt($ch, CURLOPT_HEADER, 0);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_BINARYTRANSFER,0);
-    curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, 0); 
-    $rawdata=curl_exec($ch);
-    curl_close ($ch);
-
-return $rawdata;
-}
-function parseApiRequest($request)
-{
-    $url = "https://api.ipsmith.org/".$request;
-
-    $result = downloadUrl($url);
-
-    $return = json_decode($result,true);
-
-    return $return;
-}
 
 $system = array("currentversion"=>'0.0.1','versiontype'=>'dev');
