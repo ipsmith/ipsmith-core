@@ -1,4 +1,0 @@
-ipsmith-core
-============
-
-ipsmith-core

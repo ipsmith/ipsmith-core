@@ -1,0 +1,11 @@
+## generic files to ignore
+*~
+*.lock
+*.DS_Store
+*.swp
+*.out
+public/.htaccess
+public/.htpasswd
+ipsmith-core/libs/config.inc.php
+ipsmith-core/cache/templates/cache/*
+ipsmith-core/cache/templates/compile/*
