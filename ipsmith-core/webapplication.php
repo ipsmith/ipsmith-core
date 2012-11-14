@@ -47,8 +47,6 @@ if(file_exists($includeFile))
 }
 
 $globallocations = array();
-if($req["module"] != "error")
-{
 
 //--- always used data
 $q = "SELECT * FROM locations ORDER BY ordernumber";
@@ -57,14 +55,6 @@ $stmt = $doctrineConnection->query($q);
 while($row = $stmt->fetch())
 {
 	$globallocations[] = $row;
-}
-/*$res = mysql_query($q);
-while($row = mysql_fetch_assoc($res))
-{
-
-
-}*/
-
 }
 $smarty->assign('globallocations',$globallocations);
 $smarty->assign('currentTitle',null);

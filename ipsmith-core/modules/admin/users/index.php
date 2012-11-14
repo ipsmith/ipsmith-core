@@ -24,26 +24,37 @@
 
 $entries= array();
 $q = "SELECT id,username,email FROM users ORDER BY username";
-$result = mysql_query($q);
-while($row = mysql_fetch_assoc($result))
+
+$stmt = $doctrineConnection->prepare($q);
+
+$stmt->execute();
+
+$globallocations = array();
+
+while ($row = $stmt->fetch())
 {
     $r = $row;
     $r["roles"] = null;;
 
-    $q = "SELECT rolename FROM VIEW_users_roles WHERE userid=%d ORDER BY rolename";
-    $q = sprintf($q,$row["id"]);
-    $res = mysql_query($q);
+    $q = "SELECT rolename FROM VIEW_users_roles WHERE userid= :userid ORDER BY rolename";
+    
+    $stmt2 = $doctrineConnection->prepare($q);
+
+    $stmt2->bindValue('userid',$row["id"]);
+
+    $stmt2->execute();
+
+    $globallocations = array();
 
     $i = 0;
-    while($ro = mysql_fetch_assoc($res))
+    while($innerrow = $stmt2->fetch())
     {
-        if($i>0) $r["roles"].=", ";
-        $r["roles"].= $ro["rolename"];
 
+        if($i>0) $r["roles"].=", ";
+        $r["roles"].= $innerrow["rolename"];
         $i++;
     }
     $r["linkid"] = $r["id"];
     $entries[] = $r;
 }
-$smarty->assign('jsonentries',json_encode($entries,JSON_FORCE_OBJECT));
 $smarty->assign('entries',$entries);

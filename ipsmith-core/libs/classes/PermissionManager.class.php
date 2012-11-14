@@ -24,33 +24,45 @@
 class PermissionManager
 {
 	public static function HasPermission($userid,$permissionname)
-	{
-		$q = "SELECT * FROM VIEW_users_permissions WHERE userid=%i and permissionname='%s'";
-		$q = sprintf($q,$userid,$permissionname);
-		$result = mysql_query($q);
-		if($row = mysql_fetch_assoc($result))
-		(
-			// TODO: add logging
-			return true;
-		)
+    {
+        global $doctrineConnection;
 
-		// TODO: add logging
+		$q = "SELECT * FROM VIEW_users_permissions WHERE userid= :userid and permissionname= :permissionname";
+
+        $stmt = $doctrineConnection->prepare($q);
+
+        $stmt->bindValue('userid',$userid);
+        $stmt->bindValue('permissionname',$permissionname);
+
+        $stmt->execute();
+    
+
+        if($row = $stmt->fetch())
+        {
+            return true;
+        }
+
 		return false;
 	}
 
 	public static function HasRole($userid,$rolename)
-	{
-                $q = "SELECT * FROM VIEW_users_permissions WHERE userid=%i and rolename='%s'";
-                $q = sprintf($q,$userid,$rolename);
-                $result = mysql_query($q);
-                if($row = mysql_fetch_assoc($result))
-                (
-                        // TODO: add logging
-                        return true;
-                )
+    {
+        global $doctrineConnection;
 
-                // TODO: add logging
-                return false;
+        $q = "SELECT * FROM VIEW_users_permissions WHERE userid= :userid and rolename= :rolename";
+        $stmt = $doctrineConnection->prepare($q);
 
+        $stmt->bindValue('userid',$userid);
+        $stmt->bindValue('rolename',$rolename);
+
+        $stmt->execute();
+    
+
+        if($row = $stmt->fetch())
+        {
+            return true;
+        }
+
+        return false;
 	}
 }
