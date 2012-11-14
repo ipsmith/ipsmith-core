@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html lang="{$smarty.session.userdata.language}">
+<!--                                                                            -->
+<!-- IPSmith: Copyright 2012, IPSmith Project. This Software is under the AGPL. -->
+<!--          Web: http://ipsmith.org/ - Lists: http://ipsmith.org/lists        -->
+<!--   GNU AFFERO General Public License: http://www.gnu.org/licenses/agpl.txt  -->
+<!--                                                                            -->
   <head>
     <meta charset="utf-8">
     <title>{$currentTitle}</title>

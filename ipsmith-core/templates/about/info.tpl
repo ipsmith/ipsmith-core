@@ -12,6 +12,9 @@
     <tr>
         <th>Anzahl an Eintr&auml;gen:</th>
         <td>{$system.entries}</td>
-        </tr>
+     </tr>
+    <tr>
+        <th>Anzahl an Benutzern:</th>
+        <td>{$system.users}</td>
 </tbody>
 </table>

@@ -9,7 +9,11 @@
                <a class="brand" href="#">IPSmith</a>
               <div class="nav-collapse collapse">
                  <p class="navbar-text pull-right">
-                   Logged in as <a href="#" class="navbar-link">Username</a>
+                   {if $smarty.session.userdata.id eq 0}
+                   <a href="{$config.baseurl}/user/login.html">Bitte melden Sie sich an.</a>
+                   {else}
+                   Angemeldet als <a href="#" class="navbar-link">{$smarty.session.userdata.username}</a>
+                   {/if}
                  </p>
                  <ul class="nav">
                    <li class="active"><a href="#">Home</a></li>

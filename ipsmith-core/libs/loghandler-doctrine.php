@@ -1,5 +1,4 @@
 <?php
-
 use Doctrine\DBAL\Logging\SQLLogger;
 use Monolog\Logger;
 /**
@@ -13,7 +12,7 @@ use Monolog\Logger;
  * @author  Guilherme Blanco <guilher...@hotmail.com>
  * @author  Jonathan Wage <jon...@gmail.com>
  * @author  Roman Borschel <ro...@code-factory.org>
- * @author  Roman Borschel <rbe@ipsmith.org>
+ * @author  Rainer Bendig <rbe@ipsmith.org>
  */
 class IPSDebugStack implements SQLLogger
 {
@@ -28,6 +27,12 @@ class IPSDebugStack implements SQLLogger
 
     public function startQuery($sql, array $params = null, array $types = null)
     {
+
+        //-- hide passwords
+        if(isset($params["password"])) 
+        { 
+            $params["password"] = sprintf("**** SECRET WITH %s CHARS ****", strlen($params["password"])); 
+        }
         $this->logger->addRecord(
                 Logger::NOTICE, 
                 $sql, 
