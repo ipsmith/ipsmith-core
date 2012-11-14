@@ -8,3 +8,4 @@ public/.htaccess
 public/.htpasswd
 ipsmith-core/libs/config.inc.php
 *.tpl.php
+ipsmith-core/logs/*.log

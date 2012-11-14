@@ -10,6 +10,9 @@ error_reporting(E_ALL);// ^ E_NOTICE ^ E_WARNING);
 include ( LIB_DIR  .'/config.loader.php');
 
 require ( LIB_DIR . '/3rdparty/smarty/libs/Smarty.class.php');
+require ( LIB_DIR . '/loghandler.php');
+
+$LogHandler = new LogHandlerClass();
 
 use Doctrine\Common\ClassLoader,
      Doctrine\DBAL\DriverManager,
@@ -20,10 +23,13 @@ require LIB_DIR.'/3rdparty/doctrine-dbal/Doctrine/Common/ClassLoader.php';
 $classLoader = new ClassLoader('Doctrine', LIB_DIR.'/3rdparty/doctrine-dbal/');
 $classLoader->register();
 
+require ( LIB_DIR . '/loghandler-doctrine.php');
+
 
 $doctrineConfig = new \Doctrine\DBAL\Configuration();
 
-$doctrineConfig->setSQLLogger(new \Doctrine\DBAL\Logging\EchoSQLLogger());
+$databaseLogger = new IPSDebugStack($LogHandler->getLogger());
+$doctrineConfig->setSQLLogger($databaseLogger );
 $doctrineConnectionParams = array(
     'dbname' => $config["db"]["name"],
     'user' => $config["db"]["user"],

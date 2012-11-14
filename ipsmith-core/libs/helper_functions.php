@@ -50,3 +50,11 @@ function parseRequest($request)
 
    return $req;
 }
+
+function userHashPassword($password)
+{
+    return md5(sha1($password));
+}
+
+
+

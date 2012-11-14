@@ -6,29 +6,36 @@ $req["page"] = "index";
 $req["displaytype"] = "index";
 $req = parseRequest($_REQUEST);
 
-
 //-- load pages
 $includeBootstrap = IPS_DIR.'/modules/'.$req["module"].'/_bootstrap.php';
 $includeFile = IPS_DIR.'/modules/'.$req["module"].'/'.$req["page"].'.php';
 
 if(file_exists($includeBootstrap))
 {
+	$LogHandler->Log("Loading ".$includeBoootstrap,IPSMITH_DEBUG);
 	include($includeBootstrap);
 }
 
 if(file_exists($includeFile))
 {
+	$LogHandler->Log("Loading ".$includeFile,IPSMITH_DEBUG);
 	include($includeFile);
 }
 
 //--- always used data
-$q = "SELECT * FROM locations ORDER BY ordernumber";
-$res = mysql_query($q);
+$q = "SELECT * FROMlocations ORDER BY ordernumber";
+
+$stmt = $doctrineConnection->query($q);
 $globallocations = array();
+while($row = $stmt->fetch())
+{
+	$globallocations[] = $row;
+}
+/*$res = mysql_query($q);
 while($row = mysql_fetch_assoc($res))
 {
-    $globallocations[] = $row;
-}
+    
+}*/
 
 $smarty->assign('globallocations',$globallocations);
 $smarty->assign('currentTitle',null);

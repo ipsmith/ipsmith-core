@@ -101,3 +101,4 @@ class BaseObject
 
           return $this->connection->fetchAll($q,$values);
      }
+}
