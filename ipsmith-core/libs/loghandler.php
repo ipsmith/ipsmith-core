@@ -14,7 +14,9 @@ use \Monolog\Handler\StreamHandler;
     
 class LogHandlerClass
 {
-	public $logger = null;
+    public $logger = null;
+    public $dblogger = null;
+
 	function __construct() 
 	{
 		if($this->logger==null)
@@ -30,8 +32,22 @@ class LogHandlerClass
 			$this->logger->pushHandler(new StreamHandler(LOG_DIR.'/alert.log', Logger::ALERT,false));
 			$this->logger->pushHandler(new StreamHandler(LOG_DIR.'/emergency.log', Logger::EMERGENCY,false));
 			
-			
 		}
+
+        if($this->dblogger==null)
+        {
+            $this->dblogger = new Logger('doctrine');      
+
+            $this->dblogger->pushHandler(new StreamHandler(LOG_DIR.'/doctrine_debug.log', Logger::DEBUG,false));
+            $this->dblogger->pushhandler(new StreamHandler(LOG_DIR.'/doctrune_info.log', Logger::INFO,false));
+            $this->dblogger->pushHandler(new StreamHandler(LOG_DIR.'/doctrine_notice.log', Logger::NOTICE,false));
+            $this->dblogger->pushHandler(new StreamHandler(LOG_DIR.'/doctrine_warning.log', Logger::WARNING,false));
+            $this->dblogger->pushHandler(new StreamHandler(LOG_DIR.'/doctrine_error.log', Logger::ERROR,false));
+            $this->dblogger->pushHandler(new StreamHandler(LOG_DIR.'/doctrine_critical.log', Logger::CRITICAL,false));
+            $this->dblogger->pushHandler(new StreamHandler(LOG_DIR.'/doctrine_alert.log', Logger::ALERT,false));
+            $this->dblogger->pushHandler(new StreamHandler(LOG_DIR.'/doctrine_emergency.log', Logger::EMERGENCY,false));
+            
+        }
 		 
 	}
 	
@@ -39,8 +55,20 @@ class LogHandlerClass
 	{
 		return $this->logger;
 	}
+
+    public function getDbLogger()
+    {
+        return $this->dblogger;
+    }
+
 	public function Log($message,$level=200,$context = array())
 	{
 		$this->logger->addRecord($level,$message, $context);
 	}
+
+    public function DbLog($message,$level=200,$context = array())
+    {
+        $this->dblogger->addRecord($level,$message,$context);
+    }
+
 }

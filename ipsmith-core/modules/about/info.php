@@ -29,4 +29,13 @@ else
     $system["newerversion"] = 0;
 }
 
+
+$q = "SELECT count(id) as count FROM entries";
+$stmt = $doctrineConnection->query($q);
+$globallocations = array();
+if($row = $stmt->fetch())
+{
+    $system["entries"] = $row["count"];
+}
+
 $smarty->assign('system',$system);

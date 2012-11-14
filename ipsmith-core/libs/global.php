@@ -28,7 +28,7 @@ require ( LIB_DIR . '/loghandler-doctrine.php');
 
 $doctrineConfig = new \Doctrine\DBAL\Configuration();
 
-$databaseLogger = new IPSDebugStack($LogHandler->getLogger());
+$databaseLogger = new IPSDebugStack($LogHandler->getDbLogger());
 $doctrineConfig->setSQLLogger($databaseLogger );
 $doctrineConnectionParams = array(
     'dbname' => $config["db"]["name"],

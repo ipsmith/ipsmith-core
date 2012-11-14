@@ -6,7 +6,7 @@
                  <span class="icon-bar"></span>
                  <span class="icon-bar"></span>
                </a>
-               <a class="brand" href="#">{lang string="global.programname"}</a>
+               <a class="brand" href="#">IPSmith</a>
               <div class="nav-collapse collapse">
                  <p class="navbar-text pull-right">
                    Logged in as <a href="#" class="navbar-link">Username</a>

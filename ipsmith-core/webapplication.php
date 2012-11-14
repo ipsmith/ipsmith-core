@@ -23,7 +23,7 @@ if(file_exists($includeFile))
 }
 
 //--- always used data
-$q = "SELECT * FROMlocations ORDER BY ordernumber";
+$q = "SELECT * FROM locations ORDER BY ordernumber";
 
 $stmt = $doctrineConnection->query($q);
 $globallocations = array();

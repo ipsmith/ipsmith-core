@@ -28,7 +28,11 @@ class IPSDebugStack implements SQLLogger
 
     public function startQuery($sql, array $params = null, array $types = null)
     {
-        $this->logger->debug($sql, array('params' => $params, 'types' => $types));
+        $this->logger->addRecord(
+                Logger::NOTICE, 
+                $sql, 
+                array('params' => $params, 'types' => $types)
+            );
     }
 
     /**
