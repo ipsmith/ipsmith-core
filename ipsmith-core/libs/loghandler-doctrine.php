@@ -38,6 +38,20 @@ class IPSDebugStack implements SQLLogger
                 $sql, 
                 array('params' => $params, 'types' => $types)
             );
+
+        if(!isset($_SESSION["stats"]) )
+        {
+            $_SESSION["stats"] = array();
+        }
+
+        if(!isset($_SESSION["stats"]["dbqueries"]))
+        {
+            $_SESSION["stats"]["dbqueries"] = 1;
+        }
+        else
+        {
+            $_SESSION["stats"]["dbqueries"]++;
+        }
     }
 
     /**

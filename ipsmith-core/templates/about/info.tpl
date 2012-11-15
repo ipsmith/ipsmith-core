@@ -16,5 +16,10 @@
     <tr>
         <th>Anzahl an Benutzern:</th>
         <td>{$system.users}</td>
+    </tr>
+    <tr>
+        <th>Anzahl an Datenbankabfragen:</th>
+        <td>{$smarty.session.stats.dbqueries}</td>
+    </tr>
 </tbody>
 </table>
