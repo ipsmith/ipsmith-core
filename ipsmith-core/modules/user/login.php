@@ -35,9 +35,9 @@ if(isset($_REQUEST["submit"]))
 
     $globallocations = array();
 
-    if($row = $stmt->fetch())
+    if($userRow = $stmt->fetch())
     {
-        $_SESSION["userdata"] = $row;
+        $_SESSION["userdata"] = $userRow;
 
         //-- We need to validate settings.
 
@@ -45,7 +45,7 @@ if(isset($_REQUEST["submit"]))
         $selectSettingsQuery = "SELECT * FROM user_settings WHERE userid= :userid";
         $settingsStmt = $doctrineConnection->prepare($selectSettingsQuery);
 
-        $settingsStmt->bindValue('userid',$row["id"]);
+        $settingsStmt->bindValue('userid',$userRow["id"]);
 
         $settingsStmt->execute();
         $_SESSION["userdata"]["config"] = null;
@@ -62,7 +62,7 @@ if(isset($_REQUEST["submit"]))
                 $settingsUpdaterQuery = "INSERT INTO user_settings (userid,settingsname,settingsvalue) VALUES ( :userid, :settingsname, :settingsvalue );";
                 $settingsUpdaterStmt = $doctrineConnection->prepare($settingsUpdaterQuery);
 
-                $settingsUpdaterStmt->bindValue('userid',$row["userid"]);
+                $settingsUpdaterStmt->bindValue('userid',$userRow["id"]);
                 $settingsUpdaterStmt->bindValue('settingsname', $key);
                 $settingsUpdaterStmt->bindValue('settingsvalue', $value);
                 $settingsUpdaterStmt->execute();
