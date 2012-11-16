@@ -50,7 +50,7 @@ if(isset($_REQUEST["submit"]))
 
         $settingsStmt->execute();
         $_SESSION["userdata"]["config"] = null;
-        while($settingsRow = $stmt->fetch())
+        while($settingsRow = $settingsStmt->fetch())
         {
 
             $dbUserSettings[$settingsRow["settingsname"]] = $settingsRow["settingsvalue"];
