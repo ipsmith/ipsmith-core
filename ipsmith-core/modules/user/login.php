@@ -74,6 +74,7 @@ if(isset($_REQUEST["submit"]))
             }
         }
 
+           $LogHandler->Log("USER-LOGIN Pumping Settings", IPSMITH_INFO, array('request'=>$_REQUEST,  'user-data'=>$userRow,  'data-pump'=>$dbUserSettings));
         $_SESSION["userdata"]["config"] = $dbUserSettings;
         @header("Location: ".$config["baseurl"]);
     }
