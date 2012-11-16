@@ -107,13 +107,13 @@ class LogHandlerClass
 
 	public function Log($message,$level=200,$context = array())
 	{
-        $context = $this->ClearPassword($context);
+
 		$this->logger->addRecord($level,$message, $context);
 	}
 
     public function DbLog($message,$level=200,$context = array())
     {
-        $context = $this->ClearPassword($context);
+
         $this->dblogger->addRecord($level,$message,$context);
     }
 
