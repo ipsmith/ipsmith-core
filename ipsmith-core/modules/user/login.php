@@ -43,11 +43,11 @@ if(isset($_REQUEST["submit"]))
 
         $dbUserSettings = array();
         $q = "SELECT * FROM user_settings WHERE userid= :userid";
-        $stmt = $doctrineConnection->prepare($q);
+        $settingsStmt = $doctrineConnection->prepare($q);
 
-        $stmt->bindValue('userid',$row["id"]);
+        $settingsStmt->bindValue('userid',$row["id"]);
 
-        $stmt->execute();
+        $settingsStmt->execute();
         $_SESSION["userdata"]["config"] = null;
         while($settingsRow = $stmt->fetch())
         {
@@ -60,12 +60,12 @@ if(isset($_REQUEST["submit"]))
             if(!isset($dbUserSettings[$key]))
             {
                 $query = "INSERT INTO user_settings (userid,settingsname,settingsvalue) VALUES ( :userid, :settingsname, :settingsvalue );";
-                $stmt = $doctrineConnection->prepare($q);
+                $settingsUpdaterStmt = $doctrineConnection->prepare($q);
 
-                $stmt->bindValue('userid',$row["userid"]);
-                $stmt->bindValue('settingsname', $key);
-                $stmt->bindValue('settingsvalue', $value);
-                $stmt->execute();
+                $settingsUpdaterStmt->bindValue('userid',$row["userid"]);
+                $settingsUpdaterStmt->bindValue('settingsname', $key);
+                $settingsUpdaterStmt->bindValue('settingsvalue', $value);
+                $settingsUpdaterStmt->execute();
 
                 $dbUserSettings[$key] = $value;
             }
