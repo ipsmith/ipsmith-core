@@ -24,8 +24,9 @@
 
 // Just a little bit stupid error logging
 
-$LogHandler->addRecord(
-                       Logger::ERROR,
-                       "Catched Error ".$_SESSION["lasterror"],
-                       array('exception' => $_SESSION["lasterror"])
-                       );
+$logger = $logHandler->getLogger();
+$logger->addRecord(
+                   Logger::ERROR,
+                   "Catched Error ".$_SESSION["lasterror"],
+                   array('exception' => $_SESSION["lasterror"])
+                   );
