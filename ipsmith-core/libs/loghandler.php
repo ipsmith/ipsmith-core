@@ -73,7 +73,7 @@ class LogHandlerClass
 
 	}
 
-    public function ClearPassword($data)
+    private function ClearPassword($data)
     {
 
         if(is_array($data))
