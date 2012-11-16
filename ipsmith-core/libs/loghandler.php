@@ -78,7 +78,7 @@ class LogHandlerClass
 
         if(is_array($data))
         {
-            foreach($data as $key = $value)
+            foreach($data as $key => $value)
             {
                 $data[$key] = ClearPassword($value);
             }
