@@ -95,3 +95,9 @@ $translation = new TranslationManager($config);
 $translation->load();
 
 $system = array("currentversion"=>'0.0.1','versiontype'=>'dev');
+
+if(isset($_REQUEST["from"]))
+{
+$LogHandler->Log("Current Session-data", IPSMITH_INFO, array('data-session'=>$_SESSION));
+
+}
