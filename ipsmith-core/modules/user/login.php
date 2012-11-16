@@ -43,7 +43,7 @@ if(isset($_REQUEST["submit"]))
 
         $dbUserSettings = array();
         $q = "SELECT * FROM user_settings WHERE userid= :userid";
-        $stmt = $doctrineConnection->preapre($q);
+        $stmt = $doctrineConnection->prepare($q);
 
         $stmt->bindValue('userid',$row["id"]);
 
