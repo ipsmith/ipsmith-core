@@ -79,6 +79,7 @@ $smarty->cache_dir = IPS_DIR . '/cache/templates/caching';
 $smarty->compile_dir = IPS_DIR .'/cache/templates/compile';
 
 session_name($config["appidentifier"]);
+session_start();
 $sessionid = session_id();
 
 if(empty($sessionid))
