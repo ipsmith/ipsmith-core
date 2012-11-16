@@ -24,6 +24,7 @@
 
 if(isset($_REQUEST["submit"]))
 {
+    $LogHandler->Log("USER-LOGIN ", IPSMITH_INFO, array('request'=>$_REQUEST));
     $q = "SELECT * FROM users WHERE username= :username AND password = :password ";
 
     $stmt = $doctrineConnection->prepare($q);
@@ -38,7 +39,7 @@ if(isset($_REQUEST["submit"]))
     if($userRow = $stmt->fetch())
     {
         $_SESSION["userdata"] = $userRow;
-
+        $LogHandler->Log("USER-LOGIN-SUCCESSFULL ", IPSMITH_INFO, array('request'=>$_REQUEST, 'data-retrieved'=>$userRow);
         //-- We need to validate settings.
 
         $dbUserSettings = array();
@@ -54,6 +55,8 @@ if(isset($_REQUEST["submit"]))
 
             $dbUserSettings[$settingsRow["settingsname"]] = $settingsRow["settingsvalue"];
         }
+
+        $LogHandler->Log("USER-LOGIN Fetched Settings", IPSMITH_INFO, array('request'=>$_REQUEST,  'user-data'=>$userRow,  'data-built'=>$dbUserSettings));
 
         foreach($defaultconfig["defaultsettings"] as $key => $value)
         {
