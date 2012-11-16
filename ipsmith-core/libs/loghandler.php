@@ -108,6 +108,7 @@ class LogHandlerClass
 	public function Log($message,$level=200,$context = array())
 	{
 
+        if(!isset($context["sessionid"])) { $context["sessionid"] =  session_id();}
 		$this->logger->addRecord($level,$message, $context);
 	}
 

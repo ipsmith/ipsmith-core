@@ -17,13 +17,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * For questions, help, comments, discussion, etc., please join the
- * IPSmith mailing list. Go to http://www.ipsmith.org/lists 
+ * IPSmith mailing list. Go to http://www.ipsmith.org/lists
  *
  **/
 
 $defaultconfig = array();
 
-$defaultconfig["appidentifier"] = "ipsmith-dev";
+$defaultconfig["appidentifier"] = "ipsmithdev";
 
 $defaultconfig["baseurl"] = "http://localhost/~rbendig/ipsmithdev";
 $defaultconfig["baselanguage"] = 'en';
