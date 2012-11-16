@@ -42,8 +42,8 @@ if(isset($_REQUEST["submit"]))
         //-- We need to validate settings.
 
         $dbUserSettings = array();
-        $q = "SELECT * FROM user_settings WHERE userid= :userid";
-        $settingsStmt = $doctrineConnection->prepare($q);
+        $selectSettingsQuery = "SELECT * FROM user_settings WHERE userid= :userid";
+        $settingsStmt = $doctrineConnection->prepare($selectSettingsQuery);
 
         $settingsStmt->bindValue('userid',$row["id"]);
 
@@ -59,8 +59,8 @@ if(isset($_REQUEST["submit"]))
         {
             if(!isset($dbUserSettings[$key]))
             {
-                $query = "INSERT INTO user_settings (userid,settingsname,settingsvalue) VALUES ( :userid, :settingsname, :settingsvalue );";
-                $settingsUpdaterStmt = $doctrineConnection->prepare($q);
+                $settingsUpdaterQuery = "INSERT INTO user_settings (userid,settingsname,settingsvalue) VALUES ( :userid, :settingsname, :settingsvalue );";
+                $settingsUpdaterStmt = $doctrineConnection->prepare($settingsUpdaterQuery);
 
                 $settingsUpdaterStmt->bindValue('userid',$row["userid"]);
                 $settingsUpdaterStmt->bindValue('settingsname', $key);
