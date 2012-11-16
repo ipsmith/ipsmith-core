@@ -1,6 +1,6 @@
 <?php
-use Doctrine\DBAL\Logging\SQLLogger;
-use Monolog\Logger;
+use \Doctrine\DBAL\Logging\SQLLogger;
+use \Monolog\Logger;
 /**
  * Includes executed SQLs in a Debug Stack
  *
@@ -29,13 +29,13 @@ class IPSDebugStack implements SQLLogger
     {
 
         //-- hide passwords
-        if(isset($params["password"])) 
-        { 
-            $params["password"] = sprintf("**** SECRET WITH %s CHARS ****", strlen($params["password"])); 
+        if(isset($params["password"]))
+        {
+            $params["password"] = sprintf("**** SECRET WITH %s CHARS ****", strlen($params["password"]));
         }
         $this->logger->addRecord(
-                Logger::NOTICE, 
-                $sql, 
+                Logger::NOTICE,
+                $sql,
                 array('params' => $params, 'types' => $types)
             );
 
