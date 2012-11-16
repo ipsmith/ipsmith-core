@@ -18,27 +18,60 @@
  * or see http://www.ipsmith.org/docs/license
  *
  * For questions, help, comments, discussion, etc., please join the
- * IPSmith mailing list. Go to http://www.ipsmith.org/lists 
+ * IPSmith mailing list. Go to http://www.ipsmith.org/lists
  *
- **/    
+ **/
 
 if(isset($_REQUEST["submit"]))
 {
     $q = "SELECT * FROM users WHERE username= :username AND password = :password ";
-    
+
     $stmt = $doctrineConnection->prepare($q);
-    
+
     $stmt->bindValue('username',$_REQUEST["username"]);
     $stmt->bindValue('password',userHashPassword($_REQUEST["password"]));
-    
+
     $stmt->execute();
-    
+
     $globallocations = array();
-    
+
     if($row = $stmt->fetch())
     {
         $_SESSION["userdata"] = $row;
 
+        //-- We need to validate settings.
+
+        $dbUserSettings = array();
+        $q = "SELECT * FROM user_settings WHERE userid= :userid";
+        $stmt = $doctrineConnection->preapre($q);
+
+        $stmt->bindValue('userid',$row["id"]);
+
+        $stmt->execute();
+        $_SESSION["userdata"]["config"] = null;
+        while($settingsRow = $stmt->fetch())
+        {
+
+            $dbUserSettings[$settingsRow["settingsname"]] = $settingsRow["settingsvalue"];
+        }
+
+        foreach($defaultconfig["defaultsettings"] as $key => $value)
+        {
+            if(!isset($dbUserSettings[$key]))
+            {
+                $query = "INSERT INTO user_settings (userid,settingsname,settingsvalue) VALUES ( :userid, :settingsname, :settingsvalue );";
+                $stmt = $doctrineConnection->prepare($q);
+
+                $stmt->bindValue('userid',$row["userid"]);
+                $stmt->bindValue('settingsname', $key);
+                $stmt->bindValue('settingsvalue', $value);
+                $stmt->execute();
+
+                $dbUserSettings[$key] = $value;
+            }
+        }
+
+        $_SESSION["userdata"]["config"] = $dbUserSettings;
         @header("Location: ".$config["baseurl"]);
     }
     else

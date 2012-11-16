@@ -17,42 +17,61 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * For questions, help, comments, discussion, etc., please join the
- * IPSmith mailing list. Go to http://www.ipsmith.org/lists 
+ * IPSmith mailing list. Go to http://www.ipsmith.org/lists
  *
  **/
 
 
 function downloadUrl($url)
 {
-	$ch = curl_init ($url);
+    global $LogHandler;
+    $LogHandler->addRecord(
+                Logger::NOTICE,
+                "About to download ".$url,
+                array('url' => $url)
+            );
+
+    $ch = curl_init ($url);
 	curl_setopt($ch, CURLOPT_HEADER, 0);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($ch, CURLOPT_BINARYTRANSFER,0);
-	curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, 0); 
-	
+	curl_setopt ($ch, CURLOPT_FOLLOWLOCATION, 0);
+
 	$rawdata=curl_exec($ch);
 	curl_close ($ch);
+    $LogHandler->addRecord(
+                Logger::NOTICE,
+                "Finished downloading ".$url,
+                array('url' => $url)
+            );
 
 	return $rawdata;
 }
 
 function parseApiRequest($request)
 {
+
+    $LogHandler->addRecord(
+                Logger::NOTICE,
+                "About to fetch REST Api from ipsmith.org ",
+                array('request' => $request)
+            );
+
 	$url = "https://api.ipsmith.org/".$request;
 
 	$result = downloadUrl($url);
 	$returnvalue = json_decode($result,true);
-	
+
 	return $returnvalue;
 }
 
-function startsWith($check, $startStr) 
+function startsWith($check, $startStr)
 {
-	if (!is_string($check) || !is_string($startStr) || strlen($check)<strlen($startStr)) 
+	if (!is_string($check) || !is_string($startStr) || strlen($check)<strlen($startStr))
 	{
 		return false;
 	}
- 
+
 	return (substr($check, 0, strlen($startStr)) === $startStr);
 }
 
@@ -78,6 +97,3 @@ function userHashPassword($password)
 {
     return md5(sha1($password));
 }
-
-
-

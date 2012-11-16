@@ -17,22 +17,22 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * For questions, help, comments, discussion, etc., please join the
- * IPSmith mailing list. Go to http://www.ipsmith.org/lists 
+ * IPSmith mailing list. Go to http://www.ipsmith.org/lists
  *
  **/
 
- 
-function ipsmith_autoload($class) 
+function ipsmith_autoload($class)
 {
-	
-	if(file_exists(LIB_DIR.'/classes/' . $class . '.class.php'))
-	{
-    include(LIB_DIR.'/classes/' . $class . '.class.php');
-  } 
-  
-  if ( file_exists(LIB_DIR.'/classes/dbos/' . $class . '.dbo.php') )
-  {
-  	file_exists(LIB_DIR.'/classes/dbos/' . $class . '.dbo.php');
-  }
+
+    if(file_exists(LIB_DIR.'/classes/' . $class . '.class.php'))
+    {
+        include(LIB_DIR.'/classes/' . $class . '.class.php');
+    }
+
+    if ( file_exists(LIB_DIR.'/classes/dbos/' . $class . '.dbo.php') )
+    {
+        file_exists(LIB_DIR.'/classes/dbos/' . $class . '.dbo.php');
+    }
 }
+
 spl_autoload_register('ipsmith_autoload');
