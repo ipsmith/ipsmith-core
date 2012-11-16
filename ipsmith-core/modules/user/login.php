@@ -38,6 +38,8 @@ if(isset($_REQUEST["submit"]))
 
     if($userRow = $stmt->fetch())
     {
+        session_destroy();
+        session_start();
         $_SESSION["userdata"] = $userRow;
         $LogHandler->Log("USER-LOGIN-SUCCESSFULL ", IPSMITH_INFO, array('request'=>$_REQUEST, 'data-retrieved'=>$userRow));
         //-- We need to validate settings.

@@ -30,4 +30,6 @@ $logger->addRecord(
                    "Catched Error ".$_SESSION["lasterror"],
                    array('exception' => $_SESSION["lasterror"])
                    );
+
+
 */
