@@ -80,7 +80,7 @@ class LogHandlerClass
         {
             foreach($data as $key => $value)
             {
-                $data[$key] = ClearPassword($value);
+                $data[$key] = $this->ClearPassword($value);
             }
         }
         else
