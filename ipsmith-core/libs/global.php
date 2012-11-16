@@ -46,8 +46,10 @@ $classLoader = new ClassLoader('Doctrine', LIB_DIR.'/3rdparty/doctrine-dbal/');
 $classLoader->register();
 
 $doctrineConfig = new \Doctrine\DBAL\Configuration();
+/*
 $databaseLogger = new IPSDebugStack($LogHandler->getDbLogger());
 $doctrineConfig->setSQLLogger($databaseLogger );
+*/
 $doctrineConnectionParams = array(
                                   'dbname' => $config["db"]["name"],
                                   'user' => $config["db"]["user"],
