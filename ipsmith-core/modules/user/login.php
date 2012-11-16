@@ -39,7 +39,7 @@ if(isset($_REQUEST["submit"]))
     if($userRow = $stmt->fetch())
     {
         $_SESSION["userdata"] = $userRow;
-        $LogHandler->Log("USER-LOGIN-SUCCESSFULL ", IPSMITH_INFO, array('request'=>$_REQUEST, 'data-retrieved'=>$userRow);
+        $LogHandler->Log("USER-LOGIN-SUCCESSFULL ", IPSMITH_INFO, array('request'=>$_REQUEST, 'data-retrieved'=>$userRow));
         //-- We need to validate settings.
 
         $dbUserSettings = array();
