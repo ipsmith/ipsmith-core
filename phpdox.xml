@@ -59,14 +59,14 @@
 
             <!--  default engine "html" -->
             <build engine="html" enabled="true" output="html">
-                <template dir="${phpDox.home}/templates/html" />
+                <template dir="/usr/share/php/TheSeer/phpDox/templates/html" />
             </build>
 
-            <!--
+
             <build engine="todo" enabled="true" output="todo">
                 <file name="todolist.txt" encoding="utf-8" />
             </build>
-
+<!--
             <build engine="graph" enabled="true" output="graph">
                 <dot executable="/usr/bin/dot" render="true" format="png" />
             </build>
