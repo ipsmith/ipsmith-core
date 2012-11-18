@@ -2,10 +2,10 @@
 
 <project name="ipsmith-coret" default="build">
  <target name="build"
-   depends="prepare,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpdox,phpcb"/>
+   depends="prepare,lint,phploc,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpdox"/>
 
  <target name="build-parallel"
-   depends="prepare,lint,tools-parallel,phpcb"/>
+   depends="prepare,lint,tools-parallel"/>
 
  <target name="tools-parallel" description="Run tools in parallel">
   <parallel threadCount="2">
