@@ -82,7 +82,7 @@ session_name($config["appidentifier"]);
 session_start();
 $sessionid = session_id();
 
-if(empty($sessionid))
+if(empty($sessionid) || !isset($_SESSION["userdata"]))
 {
   session_start();
   $_SESSION["userdata"] = array();

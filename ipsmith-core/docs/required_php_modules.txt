@@ -1,0 +1,5 @@
+IPSmith - Required PHP Modules
+
+(all names are debian package names)
+
+php5-gmp (IPv6 in IPAddress.class.php)
