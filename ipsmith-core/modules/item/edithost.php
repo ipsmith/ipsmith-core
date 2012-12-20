@@ -152,18 +152,7 @@ if($requestedid>0)
 
 if(isset($_POST['submit']))
 {
-    $color = str_replace('#', '', $_POST['entry_color_hex']);
-    $rgb = array();
-
-    if (strlen($color) != 6)
-    {
-        $rgb= array(0,0,0);
-    }
-
-    for ($x=0;$x<3;$x++)
-    {
-        $rgb[$x] = hexdec(substr($color,(2*$x),2));
-    }
+    $rgb = hex2rgb($_POST['entry_color_hex']);
 
     if(isset($_POST['entry_id']) && $_POST['entry_id']>0)
     {
