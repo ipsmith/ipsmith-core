@@ -212,9 +212,8 @@
 
 <script>
 $(function(){
-
     $('#cp3').colorpicker().on('changeColor', function(ev){
         bodyStyle.backgroundColor = ev.color.toHex();
     });
-    });
+});
 </script>
