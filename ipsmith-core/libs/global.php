@@ -83,7 +83,7 @@ $smarty->compile_dir = IPS_DIR .'/cache/templates/compile';
 session_name($config["appidentifier"]);
 $sessionid = session_id();
 
-if(empty($sessionid))
+if(empty($sessionid) || !isset($_SESSION["userdata"]))
 {
   session_start();
 }
