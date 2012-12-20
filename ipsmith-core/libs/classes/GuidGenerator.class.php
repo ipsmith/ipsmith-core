@@ -21,27 +21,22 @@
  *
  **/
 
-$defaultconfig = array();
+class GuidGenerator
+{
+    public static function Create($context=null)
+    {
+        $_value = uniqid($context,true);
+        $_value = hash('sha512',$_value);
 
-$defaultconfig["appidentifier"] = "ipsmithdev";
-
-$defaultconfig["baseurl"] = "http://localhost/~rbendig/ipsmithdev";
-$defaultconfig["baseurlpath"] = "/~rbendig/ipsmithdev";
-$defaultconfig["baselanguage"] = 'en';
-
-$defaultconfig["db"] = array();
-$defaultconfig["db"]["host"] = "127.0.0.1";
-$defaultconfig["db"]["user"] = "root";
-$defaultconfig["db"]["pass"] = "";
-$defaultconfig["db"]["name"] = "ipsmith";
-$defaultconfig["db"]["driver"] = "pdo_mysql";
-
-$defaultconfig["template"]["debugging"] = false;
-$defaultconfig["template"]["caching"] = false;
-$defaultconfig["template"]["cache_lifetime"] = 1;
-$defaultconfig["template"]["force_compile"] = true;
-$defaultconfig["template"]["use_sub_dirs"] = true;
-
-$defaultconfig["defaultsettings"] = array();
-$defaultconfig["defaultsettings"]["usehumanname"] = 0;
-$defaultconfig["defaultsettings"]["displayids"] = 0;
+        $_unique = substr($_value, 0, 8);
+        $_unique.="-";
+        $_unique.= substr($_value, 9, 4);
+        $_unique.="-";
+        $_unique.= substr($_value, 13, 4);
+        $_unique.="-";
+        $_unique.= substr($_value, 17, 4);
+        $_unique.="-";
+        $_unique.= substr($_value, 21, 12);
+        return strtoupper($_unique);
+    }
+}

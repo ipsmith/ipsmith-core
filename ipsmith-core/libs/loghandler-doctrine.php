@@ -33,6 +33,11 @@ class IPSDebugStack implements SQLLogger
         {
             $params["password"] = sprintf("**** SECRET WITH %s CHARS ****", strlen($params["password"]));
         }
+
+        if(isset($_SESSION["userdata"]["username"]))
+        {
+            $sql = "[".$_SESSION["userdata"]["username"]."]  ".$sql;
+        }
         $this->logger->addRecord(
                 Logger::NOTICE,
                 $sql,

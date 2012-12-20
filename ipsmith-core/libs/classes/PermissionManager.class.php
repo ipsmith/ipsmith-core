@@ -17,17 +17,47 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * For questions, help, comments, discussion, etc., please join the
- * IPSmith mailing list. Go to http://www.ipsmith.org/lists 
+ * IPSmith mailing list. Go to http://www.ipsmith.org/lists
  *
  **/
 
 class PermissionManager
 {
+
+    public static function RequirePermissions($_module,$_page)
+    {
+        global $doctrineConnection;
+
+        if(
+            ($_module!='error' && $_page!='catch') &&
+            ($_module!='user' && $_page!='login') &&
+            ($_module!='user' && $_page!='logout') &&
+            ($_module!='about' && $_page!='license')
+            )
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static function CurrentUserHasRole($rolename)
+    {
+        PermissionManager::Prefetch($_SESSION["userdata"]["id"]);
+        return (isset($_SESSION['useraccess']['roles'][$rolename]) || isset($_SESSION['useraccess']['roles']['admin']) || isset($_SESSION['useraccess']['permissions']['can_do_everything']));
+    }
+
+    public static function CurrentUserHasPermission($permissionname)
+    {
+        PermissionManager::Prefetch($_SESSION["userdata"]["id"]);
+        return (isset($_SESSION['useraccess']['permissions'][$permissionname]) || isset($_SESSION['useraccess']['permissions']['can_do_everything']) );
+    }
+
 	public static function HasPermission($userid,$permissionname)
     {
         global $doctrineConnection;
 
-		$q = "SELECT * FROM VIEW_users_permissions WHERE userid= :userid and permissionname= :permissionname";
+		$q = "SELECT * FROM VIEW_users_permissions WHERE userid= :userid AND (permissionname= :permissionname OR  permissionname='can_do_everything');";
 
         $stmt = $doctrineConnection->prepare($q);
 
@@ -35,7 +65,7 @@ class PermissionManager
         $stmt->bindValue('permissionname',$permissionname);
 
         $stmt->execute();
-    
+
 
         if($row = $stmt->fetch())
         {
@@ -44,6 +74,46 @@ class PermissionManager
 
 		return false;
 	}
+
+
+    public static function Prefetch($userid)
+    {
+        global $doctrineConnection, $LogHandler;
+
+        if(!isset($_SESSION['useraccess']['lastfetch']))
+        {
+            $_SESSION['useraccess']['lastfetch'] = time();
+        }
+
+        if($_SESSION['useraccess']['lastfetch']<time()-120)
+        {
+        $LogHandler->Log("prefetching permissions", IPSMITH_DEBUG);
+
+            $_SESSION['useraccess'] = array();
+            $_SESSION['useraccess']['roles'] = array();
+            $_SESSION['useraccess']['permissions'] = array();
+            $_SESSION['useraccess']['lastfetch'] = time();
+
+            $q = 'SELECT * FROM VIEW_users_permissions WHERE userid=:userid;';
+            $stmt = $doctrineConnection->prepare($q);
+            $stmt->bindValue('userid',$userid);
+
+            $stmt->execute();
+
+            while($row = $stmt->fetch())
+            {
+                if(!isset($row['rolename'],$_SESSION['useraccess']['roles'][$row['rolename']]))
+                {
+                    $_SESSION['useraccess']['roles'][$row['rolename']] = 1;
+                }
+
+                if(!isset($_SESSION['useraccess']['permissions'][$row['permissionname']]))
+                {
+                    $_SESSION['useraccess']['permissions'][$row['permissionname']] = 1;
+                }
+            }
+        }
+    }
 
 	public static function HasRole($userid,$rolename)
     {
@@ -56,7 +126,7 @@ class PermissionManager
         $stmt->bindValue('rolename',$rolename);
 
         $stmt->execute();
-    
+
 
         if($row = $stmt->fetch())
         {

@@ -18,9 +18,9 @@
  * or see http://www.ipsmith.org/docs/license
  *
  * For questions, help, comments, discussion, etc., please join the
- * IPSmith mailing list. Go to http://www.ipsmith.org/lists 
+ * IPSmith mailing list. Go to http://www.ipsmith.org/lists
  *
- **/    
+ **/
 
 $requestedlocationid = 1;
 $catid = 1;
@@ -30,9 +30,6 @@ if(Isset($_REQUEST["locationid"]))
     $requestedlocationid = $_REQUEST["locationid"];
 }
 $smarty->assign("locationid",$requestedlocationid);
-
-
-
 
 $q = "SELECT * FROM locations WHERE id= :id ";
 
@@ -65,15 +62,30 @@ while($row = $stmt->fetch())
 
 
 $entries = array();
-$q = "SELECT * FROM entries WHERE locationid= :locationid AND catid= :catid";
-$stmt = $doctrineConnection->prepare($q);
-$stmt->bindValue("locationid", $requestedlocationid);
-$stmt->bindValue("catid",$catid);
-$stmt->execute();
-while($row = $stmt->fetch())
-{                                                                                                                                                                                                                                              
-        $entries[] = $row;
+
+$selectEntryTypeQuery = 'SELECT * FROM types WHERE id=:typeid';
+$selectEntryTypeStmt = $doctrineConnection->prepare($selectEntryTypeQuery);
+
+$selectEntriesQuery = 'SELECT * FROM entries WHERE locationid= :locationid AND catid= :catid';
+$selectEntriesStmt = $doctrineConnection->prepare($selectEntriesQuery);
+$selectEntriesStmt->bindValue('locationid', $requestedlocationid);
+$selectEntriesStmt->bindValue('catid',$catid);
+$selectEntriesStmt->execute();
+while($row = $selectEntriesStmt->fetch())
+{
+	$_row = $row;
+
+	$selectEntryTypeStmt->bindValue('typeid',$row["typeid"]);
+	$selectEntryTypeStmt->execute();
+	if($typeinforow = $selectEntryTypeStmt->fetch())
+	{
+		$_row["typeinfo"] = $typeinforow;
+	}
+
+     $entries[] = $_row;
 }
 
 $smarty->assign('currentcategories',$currentcategories);
-$smarty->assign("entries",$entries);
+$smarty->assign('entries',$entries);
+
+SetTitle('Übersicht');

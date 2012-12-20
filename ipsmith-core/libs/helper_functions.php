@@ -21,15 +21,32 @@
  *
  **/
 
+function hex2rgb($color)
+{
+    $color = str_replace('#', '', $color);
+    $rgb = array();
+
+    if (strlen($color) != 6)
+    {
+        $rgb= array(0,0,0);
+    }
+
+    for ($x=0;$x<3;$x++)
+    {
+        $rgb[$x] = hexdec(substr($color,(2*$x),2));
+    }
+
+    return $rgb;
+}
 
 function downloadUrl($url)
 {
-    global $LogHandler;
+ /*   global $LogHandler;
     $LogHandler->addRecord(
                 Logger::NOTICE,
                 "About to download ".$url,
                 array('url' => $url)
-            );
+            );*/
 
     $ch = curl_init ($url);
 	curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -39,24 +56,24 @@ function downloadUrl($url)
 
 	$rawdata=curl_exec($ch);
 	curl_close ($ch);
-    $LogHandler->addRecord(
+    /*$LogHandler->addRecord(
                 Logger::NOTICE,
                 "Finished downloading ".$url,
                 array('url' => $url)
             );
-
+*/
 	return $rawdata;
 }
 
 function parseApiRequest($request)
 {
-
-    $LogHandler->addRecord(
+    global $LogHandler;
+   /* $LogHandler->addRecord(
                 Logger::NOTICE,
                 "About to fetch REST Api from ipsmith.org ",
                 array('request' => $request)
             );
-
+*/
 	$url = "https://api.ipsmith.org/".$request;
 
 	$result = downloadUrl($url);
@@ -96,4 +113,11 @@ function parseRequest($request)
 function userHashPassword($password)
 {
     return md5(sha1($password));
+}
+
+function SetTitle($title)
+{
+    global $webapp;
+
+    $webapp["title"] = $title.' - '.$webapp["title"];
 }

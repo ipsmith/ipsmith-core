@@ -12,13 +12,20 @@
                    {if $smarty.session.userdata.id eq 0}
                    <a href="{$config.baseurl}/user/login.html">Bitte melden Sie sich an.</a>
                    {else}
-                   Angemeldet als <a href="#" class="navbar-link">{$smarty.session.userdata.username}</a>
+
+                   Angemeldet als <a href="#" class="navbar-link">{if isset($smarty.session.userdata.firstname) && isset($smarty.session.userdata.lastname)}{$smarty.session.userdata.firstname} {$smarty.session.userdata.lastname}{else}{$smarty.session.userdata.username}{/if}</a>. <a href="{$config.baseurl}/user/logout.html">Abmelden</a>
+
                    {/if}
                  </p>
                  <ul class="nav">
-                   <li class="active"><a href="#">Home</a></li>
-                   <li><a href="{$config.baseurl}/about/info.html">About</a></li>
-                   <li><a href="#contact">Contact</a></li>
+                   {if PermissionManager::CurrentUserHasPermission('can_view_ips')}<li{if $currentModule=='list'} class="active"{/if}><a href="{$config.baseurl}/list/index.html">Adressen</a></li>{/if}
+                   {if PermissionManager::CurrentUserHasPermission('can_view_users')}<li><a href="#">Benutzer</a></li>{/if}
+                   {if PermissionManager::CurrentUserHasPermission('can_view_locations')}<li><a href="#">Einsatzorte</a></li>{/if}
+                   {if PermissionManager::CurrentUserHasPermission('can_view_categories')}<li><a href="#">Kategorien</a></li>{/if}
+                   {if PermissionManager::CurrentUserHasPermission('can_view_types')}<li><a href="{$config.baseurl}/types/index.html">Typen</a></li>{/if}
+                   {if PermissionManager::CurrentUserHasPermission('can_view_attributes')}<li><a href="{$config.baseurl}/attributes/list.html">Attribute</a></li>{/if}
+                   {if PermissionManager::CurrentUserHasPermission('can_view_admin')}<li><a href="#">Einstellungen</a></li>{/if}
+                   {if PermissionManager::CurrentUserHasPermission('can_view_about')}<li{if $currentModule=='about'} class="active"{/if}><a href="{$config.baseurl}/about/info.html">About</a></li>{/if}
                  </ul>
                </div><!--/.nav-collapse -->
              </div>

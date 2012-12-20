@@ -24,6 +24,7 @@
 define('LIB_DIR', dirname(__FILE__) );
 define('IPS_DIR', LIB_DIR.'/..' );
 define('LOG_DIR', IPS_DIR.'/logs' );
+define('PUBLIC_DIR', IPS_DIR.'/../public');
 
 date_default_timezone_set('Europe/Berlin');
 ini_set("display_errors", TRUE);
@@ -56,16 +57,17 @@ $doctrineConnectionParams = array(
                                   'password' => $config["db"]["pass"],
                                   'host' => $config["db"]["host"],
                                   'driver' => $config["db"]["driver"],
+                                  'charset' => 'utf8',
+                                  'driverOptions' => array(
+                                                           1002=>'SET NAMES utf8'
+                                                           )
 );
 
 $doctrineConnection = DriverManager::getConnection($doctrineConnectionParams, $doctrineConfig);
 $doctrineConnection->driverOptions = array(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-//TODO: do we really need this?
-require ( LIB_DIR .'/dbos/BaseObject.dbo.php');
 require ( LIB_DIR .'/ipsmith_autoload.php');
 require ( LIB_DIR .'/helper_functions.php');
-
 
 $smarty = new Smarty;
 
@@ -79,12 +81,15 @@ $smarty->cache_dir = IPS_DIR . '/cache/templates/caching';
 $smarty->compile_dir = IPS_DIR .'/cache/templates/compile';
 
 session_name($config["appidentifier"]);
-session_start();
 $sessionid = session_id();
 
 if(empty($sessionid))
 {
   session_start();
+}
+
+if(!isset($_SESSION["userdata"]))
+{
   $_SESSION["userdata"] = array();
   $_SESSION["userdata"]["id"] = 0;
   $_SESSION["userdata"]["username"] = "guest";
@@ -97,8 +102,10 @@ $translation->load();
 
 $system = array("currentversion"=>'0.0.1','versiontype'=>'dev');
 
+PermissionManager::Prefetch($_SESSION['userdata']['id']);
+
 if(isset($_REQUEST["from"]))
 {
-$LogHandler->Log("Current Session-data", IPSMITH_INFO, array('data-session'=>$_SESSION));
-
+  $LogHandler->Log("Current Session-data", IPSMITH_INFO, array('data-session'=>$_SESSION));
 }
+

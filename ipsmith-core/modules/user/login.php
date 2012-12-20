@@ -86,3 +86,5 @@ if(isset($_REQUEST["submit"]))
         //-- todo: handle error
     }
 }
+
+SetTitle('Anmelden');

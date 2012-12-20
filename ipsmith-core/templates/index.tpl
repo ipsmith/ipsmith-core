@@ -12,49 +12,59 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <!-- Le styles -->
     <link href="{$config.baseurl}/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="{$config.baseurl}/assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="{$config.baseurl}/assets/colorpicker/css/colorpicker.css" rel="stylesheet">
     <link href="{$config.baseurl}/assets/css/ipsmith.css" rel="stylesheet">
+    <link href="{$config.baseurl}/assets/css/dd.css" rel="stylesheet">
     <script src="{$config.baseurl}/assets/js/jquery-1.8.2.min.js"></script>
 
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-
   </head>
 
   <body>
-{include file="_navigation/topbar.tpl"}
-<div id="wrap">
+    {include file="_navigation/topbar.tpl"}
+
     <div class="container-fluid">
       <div class="row-fluid">
-        <div class="span3">
-          
+        {if PermissionManager::CurrentUserHasRole('user') && ($currentModule!='error' && $currentPage!='catch')}
             {include file="_navigation/sidebar.tpl"}
-        </div><!--/span-->
-        <div class="span9">
-            
-		{include file="$currentModule/$currentPage.tpl"}
-	</div><!--/span-->
-         </div><!--/row-->
-
-    </div><!--/.fluid-container-->
-</div>
-<div id="push">
-    <div id="footer">
-      <div class="container">
-        <p class="muted credit">{lang string="global.copyright"}</p>
+        {/if}
+        <div class="span{if PermissionManager::CurrentUserHasRole('user')  && ($currentModule!='error' && $currentPage!='catch')}9{else}12{/if}">
+		      {include file="$currentModule/$currentPage.tpl"}
+	      </div>
       </div>
     </div>
-</div>
 
-</div>
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="{$config.baseurl}/assets/bootstrap/js/bootstrap.min.js"></script>
+    <footer class="footer">
+      <div class="container">
+        <p>&copy; 2012 <a href="http://ipsmith.org" target="_blank">IPSmith Project</a> and <a href="https://twitter.com/mrbendig" target="_blank">@mrbendig</a>.</p>
+        <p>Code licensed under <a href="{$config.baseurl}/about/license.html">GNU LESSER GENERAL PUBLIC LICENSE 3</a>.</p>
+        <p><a href="http://glyphicons.com">Glyphicons Free</a> licensed under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.</p>
+        <ul class="footer-links">
+          <li><a href="http://blog.ipsmith.org">Blog</a></li>
+          <li class="muted">&middot;</li>
+          <li><a href="http://bugs.ipsmith.org">Issues</a></li>
+                  </ul>
+      </div>
+    </footer>
+
+    <script src="{$config.baseurl}/assets/bootstrap/js/bootstrap-transition.js"></script>
+    <script src="{$config.baseurl}/assets/bootstrap/js/bootstrap-alert.js"></script>
+    <script src="{$config.baseurl}/assets/bootstrap/js/bootstrap-modal.js"></script>
+    <script src="{$config.baseurl}/assets/bootstrap/js/bootstrap-dropdown.js"></script>
+    <script src="{$config.baseurl}/assets/bootstrap/js/bootstrap-scrollspy.js"></script>
+    <script src="{$config.baseurl}/assets/bootstrap/js/bootstrap-tab.js"></script>
+    <script src="{$config.baseurl}/assets/bootstrap/js/bootstrap-tooltip.js"></script>
+    <script src="{$config.baseurl}/assets/bootstrap/js/bootstrap-popover.js"></script>
+    <script src="{$config.baseurl}/assets/bootstrap/js/bootstrap-button.js"></script>
+    <script src="{$config.baseurl}/assets/bootstrap/js/bootstrap-collapse.js"></script>
+    <script src="{$config.baseurl}/assets/bootstrap/js/bootstrap-carousel.js"></script>
+    <script src="{$config.baseurl}/assets/bootstrap/js/bootstrap-typeahead.js"></script>
+    <script src="{$config.baseurl}/assets/bootstrap/js/bootstrap-affix.js"></script>
+    <script src="{$config.baseurl}/assets/js/ipsmith.js"></script>
 
   </body>
 </html>

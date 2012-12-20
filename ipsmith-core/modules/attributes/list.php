@@ -15,33 +15,36 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * or see http://www.ipsmith.org/docs/license
  *
  * For questions, help, comments, discussion, etc., please join the
  * IPSmith mailing list. Go to http://www.ipsmith.org/lists
  *
  **/
 
-$defaultconfig = array();
+$selectAttributesQuery = 'SELECT * FROM attribute_definitions ORDER BY id asc;';
+$selectAttributesStmt  = $doctrineConnection->prepare($selectAttributesQuery);
 
-$defaultconfig["appidentifier"] = "ipsmithdev";
+$countAttributesQuery = 'SELECT count(attributeid) AS counter FROM attributes2entry WHERE attributeid=:attributeid;';
+$countAttributesStmt  = $doctrineConnection->prepare($countAttributesQuery);
 
-$defaultconfig["baseurl"] = "http://localhost/~rbendig/ipsmithdev";
-$defaultconfig["baseurlpath"] = "/~rbendig/ipsmithdev";
-$defaultconfig["baselanguage"] = 'en';
 
-$defaultconfig["db"] = array();
-$defaultconfig["db"]["host"] = "127.0.0.1";
-$defaultconfig["db"]["user"] = "root";
-$defaultconfig["db"]["pass"] = "";
-$defaultconfig["db"]["name"] = "ipsmith";
-$defaultconfig["db"]["driver"] = "pdo_mysql";
+$selectAttributesStmt->execute();
 
-$defaultconfig["template"]["debugging"] = false;
-$defaultconfig["template"]["caching"] = false;
-$defaultconfig["template"]["cache_lifetime"] = 1;
-$defaultconfig["template"]["force_compile"] = true;
-$defaultconfig["template"]["use_sub_dirs"] = true;
+$attributes = array();
+while($selectAttributesRow = $selectAttributesStmt->fetch())
+{
+    $_row = $selectAttributesRow;
 
-$defaultconfig["defaultsettings"] = array();
-$defaultconfig["defaultsettings"]["usehumanname"] = 0;
-$defaultconfig["defaultsettings"]["displayids"] = 0;
+    $countAttributesStmt->bindValue('attributeid',$selectAttributesRow['id']);
+    $countAttributesStmt->execute();
+
+    if($countAttributesRow = $countAttributesStmt->fetch())
+    {
+            $_row['counter'] = $countAttributesRow['counter'];
+    }
+
+    $attributes[] = $_row;
+}
+
+$smarty->assign('attributes', $attributes);
