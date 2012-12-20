@@ -31,7 +31,7 @@
           {if PermissionManager::CurrentUserHasPermission('can_view_locations')}
             <li{if $currentModule=='locations'} class="active"{/if}>
               <a href="#">
-                Einsatzorte
+                Kategorien
               </a>
             </li>
           {/if}
