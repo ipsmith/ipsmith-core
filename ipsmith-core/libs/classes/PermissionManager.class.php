@@ -43,13 +43,13 @@ class PermissionManager
 
     public static function CurrentUserHasRole($rolename)
     {
-        PermissionManager::Prefetch($_SESSION["userdata"]["id"]);
+        PermissionManager::Prefetch($_SESSION['userdata']['id']);
         return (isset($_SESSION['useraccess']['roles'][$rolename]) || isset($_SESSION['useraccess']['roles']['admin']) || isset($_SESSION['useraccess']['permissions']['can_do_everything']));
     }
 
     public static function CurrentUserHasPermission($permissionname)
     {
-        PermissionManager::Prefetch($_SESSION["userdata"]["id"]);
+        PermissionManager::Prefetch($_SESSION['userdata']['id']);
         return (isset($_SESSION['useraccess']['permissions'][$permissionname]) || isset($_SESSION['useraccess']['permissions']['can_do_everything']) );
     }
 
@@ -85,24 +85,27 @@ class PermissionManager
             $_SESSION['useraccess']['lastfetch'] = time();
         }
 
-        if($_SESSION['useraccess']['lastfetch']<time()-120)
+        if($_SESSION['useraccess']['lastfetch']<time()-120 ||
+            !isset($_SESSION['useraccess']['userid']) ||
+             $_SESSION['useraccess']['userid']!=$_SESSION['userdata']['id'])
         {
-        $LogHandler->Log("prefetching permissions", IPSMITH_DEBUG);
+            $LogHandler->Log('prefetching permissions', IPSMITH_DEBUG);
 
-            $_SESSION['useraccess'] = array();
-            $_SESSION['useraccess']['roles'] = array();
-            $_SESSION['useraccess']['permissions'] = array();
-            $_SESSION['useraccess']['lastfetch'] = time();
+            $_SESSION['useraccess']                 = array();
+            $_SESSION['useraccess']['roles']        = array();
+            $_SESSION['useraccess']['permissions']  = array();
+            $_SESSION['useraccess']['lastfetch']    = time();
+            $_SESSION['useraccess']['userid']       =$_SESSION['userdata']['id'];
 
-            $q = 'SELECT * FROM VIEW_users_permissions WHERE userid=:userid;';
-            $stmt = $doctrineConnection->prepare($q);
-            $stmt->bindValue('userid',$userid);
+            $selectUserAccessQuery = 'SELECT * FROM VIEW_users_permissions WHERE userid=:userid;';
+            $selectUserAccessStmt = $doctrineConnection->prepare($selectUserAccessQuery);
+            $selectUserAccessStmt->bindValue('userid',$userid);
 
-            $stmt->execute();
+            $selectUserAccessStmt->execute();
 
-            while($row = $stmt->fetch())
+            while($row = $selectUserAccessStmt->fetch())
             {
-                if(!isset($row['rolename'],$_SESSION['useraccess']['roles'][$row['rolename']]))
+                if(!isset($_SESSION['useraccess']['roles'][$row['rolename']]))
                 {
                     $_SESSION['useraccess']['roles'][$row['rolename']] = 1;
                 }
@@ -119,7 +122,7 @@ class PermissionManager
     {
         global $doctrineConnection;
 
-        $q = "SELECT * FROM VIEW_users_permissions WHERE userid= :userid and rolename= :rolename";
+        $q = 'SELECT * FROM VIEW_users_permissions WHERE userid= :userid and rolename= :rolename';
         $stmt = $doctrineConnection->prepare($q);
 
         $stmt->bindValue('userid',$userid);
