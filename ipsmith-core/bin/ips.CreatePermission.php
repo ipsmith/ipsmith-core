@@ -41,6 +41,7 @@ else
 	if($row = $checkPermissionExistsStmt->fetch())
 	{
 		echo "Permission \"".$argv[1]."\" already exists.\n";
+		exit(1);
 	}
 	else
 	{
@@ -51,5 +52,8 @@ else
 		$createPermissionStmt->bindValue('createdby','commandline');
 
 		$createPermissionStmt->execute();
+
+		echo "Permission \"".$argv[1]."\" created.\n";
+		exit(0);
 	}
 }
