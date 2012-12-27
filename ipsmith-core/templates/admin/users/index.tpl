@@ -1,7 +1,16 @@
 <h2>Benutzer <small>Übersicht</small></h2>
 
-<table class="table table-striped sorttable">
-    <thead>
+<table class="table table-striped">
+{foreach $entries as $entry  name='usersForeach'}
+
+    {if ($smarty.foreach.usersForeach.iteration is div by
+        $smarty.session.userdata.config.repeatheaders) ||
+        ($smarty.foreach.usersForeach.first)}
+
+    {if $smarty.foreach.usersForeach.first}
+        <thead>
+    {/if}
+
         <tr>
             {if $smarty.session.userdata.config.displayids eq "1"}
                 <th>#</th>
@@ -11,9 +20,12 @@
             <th>Rollen</th>
             <th>&nbsp;</th>
         </tr>
-    </thead>
-<tbody>
-{foreach $entries as $entry}
+
+    {if $smarty.foreach.usersForeach.first}
+        </thead>
+    {/if}
+
+    {/if}
     <tr>
         {if $smarty.session.userdata.config.displayids eq "1"}
             <td>
@@ -37,5 +49,4 @@
         <td>{include file="admin/users/_usereditbutton.tpl" data=$entry}</td>
     </tr>
 {/foreach}
-</tbody>
 </table>

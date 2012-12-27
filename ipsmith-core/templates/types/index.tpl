@@ -1,16 +1,31 @@
 <h2>Typen-&Uuml;bersicht</h2>
 
 <table class="table table-striped">
+{foreach $types as $type  name='typesForeach'}
+
+    {if ($smarty.foreach.typesForeach.iteration is div by
+        $smarty.session.userdata.config.repeatheaders) ||
+        ($smarty.foreach.typesForeach.first)}
+
+    {if $smarty.foreach.typesForeach.first}
+        <thead>
+    {/if}
+
     <tr>
         {if $smarty.session.userdata.config.displayids eq "1"}<th>#</th>{/if}
-
         <th>Typenname</th>
         <th class="span1">Hintergrundfarbe</th>
         <th class="span1">Vordergrundfarbe</th>
         <th class="span2">Darstellung</th>
         <th class="span1">Bearbeiten</th>
     </tr>
-{foreach $types as $type}
+
+    {if $smarty.foreach.typesForeach.first}
+        </thead>
+    {/if}
+
+    {/if}
+
     <tr>
         {if $smarty.session.userdata.config.displayids eq "1"}<th>{$type.id}</th>{/if}
         <td>{$type.typename}</td>

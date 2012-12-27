@@ -45,3 +45,4 @@ $defaultconfig["template"]["use_sub_dirs"] = true;
 $defaultconfig["defaultsettings"] = array();
 $defaultconfig["defaultsettings"]["usehumanname"] = 0;
 $defaultconfig["defaultsettings"]["displayids"] = 0;
+$defaultconfig["defaultsettings"]["repeatheaders"] = 10;

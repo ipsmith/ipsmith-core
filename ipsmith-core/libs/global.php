@@ -93,7 +93,7 @@ if(!isset($_SESSION["userdata"]))
   $_SESSION["userdata"] = array();
   $_SESSION["userdata"]["id"] = 0;
   $_SESSION["userdata"]["username"] = "guest";
-  $_SESSION["userdata"]["language"] = "en";
+  $_SESSION["userdata"]["language"] = "de";
   $_SESSION["userdata"]["config"] = $config["defaultsettings"];
 }
 
