@@ -27,7 +27,7 @@ $defaultconfig["appidentifier"] = "ipsmithdev";
 
 $defaultconfig["baseurl"] = "http://localhost/~rbendig/ipsmithdev";
 $defaultconfig["baseurlpath"] = "/~rbendig/ipsmithdev";
-$defaultconfig["baselanguage"] = 'en';
+$defaultconfig["baselanguage"] = 'de';
 
 $defaultconfig["db"] = array();
 $defaultconfig["db"]["host"] = "127.0.0.1";
@@ -36,6 +36,7 @@ $defaultconfig["db"]["pass"] = "";
 $defaultconfig["db"]["name"] = "ipsmith";
 $defaultconfig["db"]["driver"] = "pdo_mysql";
 
+$defaultconfig["template"] = array();
 $defaultconfig["template"]["debugging"] = false;
 $defaultconfig["template"]["caching"] = false;
 $defaultconfig["template"]["cache_lifetime"] = 1;

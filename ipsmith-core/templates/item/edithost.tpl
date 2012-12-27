@@ -93,7 +93,11 @@
                     <td>
                         <select id="entry_icon" name="entry_icon"  class="imagedropdown">
                         {foreach $icons as $icon}
-                            <option style="background:url({$icon.path})  left top no-repeat #fff;padding-left:20px; " value="{$icon.path}" data-imagesrc="{$icon.path}">{$icon.name}</option>
+                            <option style="background:url({$icon.path})  left top no-repeat #fff;padding-left:20px; "
+                                    value="{$icon.path}" data-imagesrc="{$icon.path}"
+                                    {if $currententry.iconpath neq "" && $currententry.iconpath eq $icon.path}selected{/if}>
+                                    {$icon.name}
+                            </option>
                         {/foreach}
                         </select>
                     </td>

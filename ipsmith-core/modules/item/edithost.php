@@ -40,7 +40,7 @@ $icons = array();
 $icondir = dir(PUBLIC_DIR.'/assets/icons');
 while(false !== ($entry = $icondir->read()))
 {
-    if($entry!='.' && $entry!='..')
+    if($entry!='.' && $entry!='..' && $entry!='.gitkeep')
     {
         $icons[]= array ( 'name' => basename($entry),
                           'path'=>$config['baseurlpath'].'/assets/icons/'.$entry);
