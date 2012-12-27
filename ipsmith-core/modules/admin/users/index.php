@@ -23,7 +23,7 @@
  **/    
 
 $entries= array();
-$q = "SELECT id,username,email FROM users ORDER BY username";
+$q = "SELECT * FROM users ORDER BY username";
 
 $stmt = $doctrineConnection->prepare($q);
 

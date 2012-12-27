@@ -4,7 +4,7 @@
       {include file="list/_sidebar.tpl"}
     {/if}
 
-    {if in_array($currentModule,array('about','types'))}
+    {if in_array($currentModule,array('about','types','admin/users'))}
       {include file="$currentModule/_sidebar.tpl"}
     {/if}
   </ul>

@@ -31,7 +31,7 @@
           {if PermissionManager::CurrentUserHasPermission('can_view_locations')}
             <li{if $currentModule=='locations'} class="active"{/if}>
               <a href="#">
-                Kategorien
+                Einsatzorte
               </a>
             </li>
           {/if}
@@ -62,7 +62,7 @@
 
           {if PermissionManager::CurrentUserHasPermission('can_view_admin')}
             <li{if $currentModule=='admin'} class="active"{/if}>
-              <a href="#">
+              <a href="{$config.baseurl}/admin/index.html">
                 Einstellungen
               </a>
             </li>
