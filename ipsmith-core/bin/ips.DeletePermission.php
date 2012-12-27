@@ -24,7 +24,7 @@
 
 if(!isset($argv[1]))
 {
-	echo  "Please run \"php " .$argv[0]." rolename\"\n";
+	echo  "Please run \"php " .$argv[0]." permissionname\"\n";
 	exit(1);
 }
 else
