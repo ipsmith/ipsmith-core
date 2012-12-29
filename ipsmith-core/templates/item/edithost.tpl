@@ -16,24 +16,36 @@
     <div class="tab-content">
 
         <div class="tab-pane" id="itemexport">
-
             <div class="row">
                 <div class="span1">&nbsp;</div>
                 <div class="span3" style="text-align:right;">
-                    <select name="entry_exports[]" id="entry_exports" size="6" multiple="true">
+                    <select name="entry_exports[]"
+                            id="entry_exports"
+                            size="6"
+                            multiple="true">
                         {foreach $selectedexports as $export}
-                        <option title="{$export.exportname}" rel="{$export.id}" value="{$export.id}">{$export.exportname}</option>
+                            <option title="{$export.exportname}"
+                                    rel="{$export.id}"
+                                    value="{$export.id}">
+                                    {$export.exportname}
+                            </option>
                         {/foreach}
                     </select>
                 </div>
                 <div class="span2" style="text-align:center;">
                     <p>&nbsp;</p>
                     <p>
-                        <button id="exportadd" class="btn btn-primary">&laquo; hinzufügen</button>
+                        <button id="exportadd"
+                                class="btn btn-primary">
+                                &laquo; hinzufügen
+                        </button>
                     </p>
 
                     <p>
-                        <button id="exportremove" class="btn btn-primary">entfernen &raquo;</button>
+                        <button id="exportremove"
+                                class="btn btn-primary">
+                                entfernen &raquo;
+                        </button>
                     </p>
                         <script type="text/javascript">
                           $().ready(function() {
@@ -48,10 +60,17 @@
                 </div>
 
                 <div class="span3">
-                        <select name="exportavailable[]" id="exportavailable" size="6" multiple="multiple">
-                        {foreach $availableexports as $export}
-                        <option title="{$export.exportname}" rel="{$export.id}" value="{$export.id}">{$export.exportname}</option>
-                        {/foreach}
+                        <select name="exportavailable[]"
+                                id="exportavailable"
+                                size="6"
+                                multiple="multiple">
+                                {foreach $availableexports as $export}
+                                    <option title="{$export.exportname}"
+                                            rel="{$export.id}"
+                                            value="{$export.id}">
+                                            {$export.exportname}
+                                    </option>
+                                {/foreach}
                         </select>
                 </div>
             </div>
@@ -61,10 +80,16 @@
                 <tr>
                     <th  class="span3">Einsatzort:</th>
                     <td>
-                        <select id="entry_location" name="entry_location" >
-                        {foreach $globallocations as $location}
-                            <option  value="{$location.id}" {if $location.id eq $currententry.locationid}selected{/if}>{$location.humanname}</option>
-                        {/foreach}
+                        <select id="entry_location"
+                                name="entry_location" >
+                                {foreach $globallocations as $location}
+                                    <option  value="{$location.id}"
+                                            {if $location.id eq $currententry.locationid}
+                                            selected
+                                            {/if}>
+                                            {$location.humanname}
+                                    </option>
+                                {/foreach}
                         </select>
                     </td>
                 </tr>
@@ -91,7 +116,7 @@
                 <tr>
                     <th>Icon:</th>
                     <td>
-                        <select id="entry_icon" name="entry_icon"  class="imagedropdown">
+                        <select id="entry_icon" name="entry_icon" class="imagedropdown">
                         {foreach $icons as $icon}
                             <option style="background:url({$icon.path})  left top no-repeat #fff;padding-left:20px; "
                                     value="{$icon.path}" data-imagesrc="{$icon.path}"
@@ -113,7 +138,13 @@
                         <div class="input-append">
                         <input type="text" id="entry_mac" name="entry_mac" value="{if isset($currententry.macaddress)}{$currententry.macaddress}{/if}" placeholder="00:00:00:00:00:00" class="span3" style="text-transform:capitalize; ">
                         <span class="add-on">
-                             <a data-original-title="Hinweis" href="#"  rel="popover" data-placement="right" data-content="Bitte geben Sie die Adresse entweder im Format '00:00:00:00:00:00' oder '00-00-00-00-00-00' ein."><i class="icon-question-sign"></i></a>
+                             <a data-original-title="Hinweis"
+                                href="#"
+                                rel="popover"
+                                data-placement="right"
+                                data-content="Bitte geben Sie die Adresse entweder im Format '00:00:00:00:00:00' oder '00-00-00-00-00-00' ein.">
+                                <i class="icon-question-sign"></i>
+                            </a>
                         </span>
                     </div>
                     </td>
@@ -136,9 +167,19 @@
                 <tr>
                     <th>Darstellung in Listen:</th>
                     <td>
-             <div class="input-append color" data-color="rgb({if isset($currententry.color_r)}{$currententry.color_r}{else}0{/if}, {if isset($currententry.color_g)}{$currententry.color_g}{else}0{/if}, {if isset($currententry.color_b)}{$currententry.color_b}{else}0{/if})" data-color-format="hex" id="cp3">
-                <input class="span3" value="{if isset($currententry.color_hex)}{$currententry.color_hex}{/if}" readonly="" type="text" id="entry_color_hex" name="entry_color_hex">
-                <span class="add-on"><i style="background-color: {if isset($currententry.color)}{$currententry.color}{else}#000000{/if}"></i></span>
+                        <div class="input-append color"
+                             data-color="rgb({if isset($currententry.color_r)}{$currententry.color_r}{else}0{/if}, {if isset($currententry.color_g)}{$currententry.color_g}{else}0{/if}, {if isset($currententry.color_b)}{$currententry.color_b}{else}0{/if})"
+                             data-color-format="hex"
+                             id="cp3">
+                        <input class="span3"
+                               value="{if isset($currententry.color_hex)}{$currententry.color_hex}{/if}"
+                               readonly=""
+                               type="text"
+                               id="entry_color_hex"
+                               name="entry_color_hex">
+                        <span class="add-on">
+                            <i style="background-color: {if isset($currententry.color)}{$currententry.color}{else}#000000{/if}"></i>
+                        </span>
             </div>
                     </td>
                 </tr>

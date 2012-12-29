@@ -15,47 +15,15 @@
             <a href="{$config.baseurl}/user/login.html">Bitte melden Sie sich an.</a>
           {else}
             Angemeldet als <a href="#" class="navbar-link">{if isset($smarty.session.userdata.firstname) && isset($smarty.session.userdata.lastname)}{$smarty.session.userdata.firstname} {$smarty.session.userdata.lastname}{else}{$smarty.session.userdata.username}{/if}</a>. <a href="{$config.baseurl}/user/logout.html">Abmelden</a>
-
           {/if}
         </p>
 
         <ul class="nav">
+
           {if PermissionManager::CurrentUserHasPermission('can_view_ips')}
             <li{if $currentModule=='list'} class="active"{/if}>
               <a href="{$config.baseurl}/list/index.html">
                 Adressen
-              </a>
-            </li>
-          {/if}
-
-          {if PermissionManager::CurrentUserHasPermission('can_view_locations')}
-            <li{if $currentModule=='locations'} class="active"{/if}>
-              <a href="#">
-                Einsatzorte
-              </a>
-            </li>
-          {/if}
-
-          {if PermissionManager::CurrentUserHasPermission('can_view_categories')}
-            <li{if $currentModule=='categories'} class="active"{/if}>
-              <a href="#">
-                Kategorien
-              </a>
-            </li>
-          {/if}
-
-          {if PermissionManager::CurrentUserHasPermission('can_view_types')}
-            <li{if $currentModule=='types'} class="active"{/if}>
-              <a href="{$config.baseurl}/types/index.html">
-                Typen
-              </a>
-            </li>
-          {/if}
-
-          {if PermissionManager::CurrentUserHasPermission('can_view_attributes')}
-            <li{if $currentModule=='attributes'} class="active"{/if}>
-              <a href="{$config.baseurl}/attributes/list.html">
-                Attribute
               </a>
             </li>
           {/if}
@@ -71,10 +39,19 @@
           {if PermissionManager::CurrentUserHasPermission('can_view_about')}
             <li{if $currentModule=='about'} class="active"{/if}>
               <a href="{$config.baseurl}/about/info.html">
-                About
+                Über
               </a>
             </li>
           {/if}
+
+          {if PermissionManager::CurrentUserHasPermission('can_view_helpcenter')}
+            <li{if $currentModule=='helpcenter'} class="active"{/if}>
+              <a href="{$config.baseurl}/helpcenter/index.html">
+                Hilfe
+              </a>
+            </li>
+          {/if}
+
         </ul>
       </div>
     </div>
