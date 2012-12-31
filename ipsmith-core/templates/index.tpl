@@ -33,6 +33,7 @@
             {include file="_navigation/sidebar.tpl"}
         {/if}
         <div class="span{if PermissionManager::CurrentUserHasRole('user')  && ($currentModule!='error' && $currentPage!='catch')}9{else}12{/if}">
+          {include file="currentmessages.tpl"}
 		      {include file="$currentModule/$currentPage.tpl"}
 	      </div>
       </div>

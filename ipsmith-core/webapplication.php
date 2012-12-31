@@ -75,7 +75,9 @@ try
 	$smarty->assign('config',$config);
 
 
+
 	$smarty->display($req["displaytype"].'.tpl');
+	unset($_SESSION["currentmessages"]);
 }
 catch (Exception $e)
 {

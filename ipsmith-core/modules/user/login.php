@@ -64,12 +64,13 @@ if(isset($_REQUEST["submit"]))
         {
             if(!isset($dbUserSettings[$key]))
             {
-                $settingsUpdaterQuery = "INSERT INTO user_settings (userid,settingsname,settingsvalue) VALUES ( :userid, :settingsname, :settingsvalue );";
+                $settingsUpdaterQuery = "INSERT INTO user_settings (userid,settingsname,settingsvalue,createdby) VALUES ( :userid, :settingsname, :settingsvalue, :createdby );";
                 $settingsUpdaterStmt = $doctrineConnection->prepare($settingsUpdaterQuery);
 
                 $settingsUpdaterStmt->bindValue('userid',$userRow["id"]);
                 $settingsUpdaterStmt->bindValue('settingsname', $key);
                 $settingsUpdaterStmt->bindValue('settingsvalue', $value);
+                $settingsUpdaterStmt->bindValue('createdby', 'loginprocedure');
                 $settingsUpdaterStmt->execute();
 
                 $dbUserSettings[$key] = $value;

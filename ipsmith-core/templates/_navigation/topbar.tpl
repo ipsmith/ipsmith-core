@@ -14,7 +14,7 @@
           {if $smarty.session.userdata.id eq 0}
             <a href="{$config.baseurl}/user/login.html">Bitte melden Sie sich an.</a>
           {else}
-            Angemeldet als <a href="#" class="navbar-link">{if isset($smarty.session.userdata.firstname) && isset($smarty.session.userdata.lastname)}{$smarty.session.userdata.firstname} {$smarty.session.userdata.lastname}{else}{$smarty.session.userdata.username}{/if}</a>. <a href="{$config.baseurl}/user/logout.html">Abmelden</a>
+            Angemeldet als <a href="#" class="navbar-link">{if isset($smarty.session.userdata.firstname) && isset($smarty.session.userdata.lastname)}{$smarty.session.userdata.firstname} {$smarty.session.userdata.lastname}{else}{$smarty.session.userdata.username}{/if}</a>. <a href="{$config.baseurl}/user/editprofile.html">Profil bearbeiten<a> <a href="{$config.baseurl}/user/logout.html">Abmelden</a>
           {/if}
         </p>
 

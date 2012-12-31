@@ -23,4 +23,5 @@
  **/    
 
 session_destroy();
-@header("Location: ".$config["baseurl"]);
+header("Location: ".$config["baseurl"]);
+die();

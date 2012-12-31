@@ -50,10 +50,8 @@ $selectPermissionsStmt->execute();
 
 while ($row = $selectPermissionsStmt->fetch())
 {
-    if(!in_array($row['permissionname'], $permissions))
-    {
-        $permissions[] = array('name'=>$row["permissionname"],'id'=>$row["id"]);
-    }
+        $permissions[] = $row;
+        //array('name'=>$row["permissionname"],'id'=>$row["id"]);
 }
 
 
@@ -63,10 +61,7 @@ $selectRolesStmt->execute();
 
 while ($row = $selectRolesStmt->fetch())
 {
-    if(!in_array($row['name'], $roles))
-    {
         $roles[] = $row;
-    }
 }
 
 $smarty->assign('permissions',$permissions);

@@ -121,3 +121,31 @@ function SetTitle($title)
 
     $webapp["title"] = $title.' - '.$webapp["title"];
 }
+
+function PumpMessage($arrayname,$message)
+{
+    if(!isset($_SESSION["currentmessages"]))
+    {
+        $_SESSION["currentmessages"] = array();   
+    }
+
+
+    if(!isset($_SESSION["currentmessages"][$arrayname]))
+    {
+        $_SESSION["currentmessages"][$arrayname] = array();   
+    }
+
+    $_SESSION["currentmessages"][$arrayname][] = $message;
+}
+
+function is_empty($string)
+{
+    if( $string === NULL ) 
+    { 
+        return true; 
+    }
+
+    $string = trim($string);
+
+    return ($string=="" || $string=='' || is_null($string));
+}

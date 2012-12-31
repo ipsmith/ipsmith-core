@@ -35,13 +35,16 @@
             </td>
         {/if}
         <td>
-            {$entry.username}
             {if (isset($entry.firstname) && isset($entry.lastname)) &&
                 ($entry.firstname neq "" && $entry.lastname neq "")}
+            
+                {$entry.firstname} {$entry.lastname}
                 <br />
                 <small>
-                    ({$entry.firstname} {$entry.lastname})
+                    ({$entry.username})
                 </small>
+            {else}
+                {$entry.username}
             {/if}
         </td>
         <td>{if $entry.email neq ""}<a href="mailto:{$entry.email}">{$entry.email}</a>{else}-{/if}

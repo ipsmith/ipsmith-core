@@ -12,7 +12,15 @@
  		<tr>
 			<td>&nbsp;</td>
 			{foreach $roles as $role}
-				<td><strong>{$role.name}</strong></td>
+				<td>
+					<strong>
+						{if $role.humanname eq ""}
+							{$role.name}
+						{else}
+							{$role.humanname}
+						{/if}
+					</strong>
+				</td>
 			{/foreach}
 		</tr>
 
@@ -23,12 +31,23 @@
 	{/if}
 
 		<tr>
-			<td class="span3"><strong>{$permission.name}</strong></td>
+			<td class="span3">
+				<strong>
+					{if $permission.humanname eq ""}
+						{$permission.permissionname}
+					{else}
+						{$permission.humanname}<br/>
+						<small>
+							({$permission.permissionname})
+						</small>
+					{/if}
+				</strong>
+			</td>
 
 			{foreach $roles as $role}
 				<td>
 					<a href="{$config.baseurl}/{$currentModule}/changepermission.html?role={$role.id}&amp;permission={$permission.id}">
-						{if isset($assigned[$role.name][$permission.name])}
+						{if isset($assigned[$role.name][$permission.permissionname])}
 							<img class="icon-ok"></i>
 						{else}
 							<img class="icon-remove"></i>

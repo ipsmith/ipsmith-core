@@ -22,19 +22,6 @@
  *
  **/
 
-
-if($_REQUEST["success"]==1)
-{
-    if($_REQUEST["lastaction"]=='update')
-    {
-        PumpMessage('success',"Eintrag erfolgreich bearbeitet.");
-    }
-    else
-    {
-        PumpMessage('success',"Eintrag erfolgreich erstellt.");
-    }
-}
-
 $currententry = null;
 $requestedid = 0;
 
@@ -244,12 +231,10 @@ if(isset($_POST['submit']))
 
     if($lastaction=='update')
     {
-        PumpMessage('success',"Eintrag erfolgreich bearbeitet.");
         $logStmt->bindValue('action','Entry #'.$requestedid.' updated');
     }
     else
     {
-        PumpMessage('success',"Eintrag erfolgreich erstellt.");
         $logStmt->bindValue('action','Entry #'.$requestedid.' created');
     }
 
@@ -285,7 +270,7 @@ if(isset($_POST['submit']))
         $insertExportStmt->execute();
     }
 
-   header('Location: '.$config['baseurl'].'/item/edithost.html?id='.$requestedid.'&success=1&lastaction='.$lastaction );
+    header('Location: '.$config['baseurl'].'/item/edithost.html?id='.$requestedid);
 }
 
 $smarty->assign('currentitemname',$currentitemname);

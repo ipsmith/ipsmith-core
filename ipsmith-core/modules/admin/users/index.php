@@ -23,38 +23,40 @@
  **/    
 
 $entries= array();
-$q = "SELECT * FROM users ORDER BY username";
+$selectUsersQuery = 'SELECT * FROM users ORDER BY username';
+$selectUsersStmt = $doctrineConnection->prepare($selectUsersQuery);
+$selectUsersStmt->execute();
 
-$stmt = $doctrineConnection->prepare($q);
+$selectRolesQuery = 'SELECT rolename, role_humanname FROM VIEW_users_roles WHERE userid= :userid ORDER BY rolename';
+$selectRolesStmt = $doctrineConnection->prepare($selectRolesQuery);
 
-$stmt->execute();
-
-$globallocations = array();
-
-while ($row = $stmt->fetch())
+while ($selectUsersRow = $selectUsersStmt->fetch())
 {
-    $r = $row;
-    $r["roles"] = null;;
+    $selectUsersWorkerRow = $selectUsersRow;
+    $selectUsersWorkerRow["roles"] = null;
 
-    $q = "SELECT rolename FROM VIEW_users_roles WHERE userid= :userid ORDER BY rolename";
-    
-    $stmt2 = $doctrineConnection->prepare($q);
-
-    $stmt2->bindValue('userid',$row["id"]);
-
-    $stmt2->execute();
-
-    $globallocations = array();
+    $selectRolesStmt->bindValue('userid',$selectUsersRow["id"]);
+    $selectRolesStmt->execute();
 
     $i = 0;
-    while($innerrow = $stmt2->fetch())
+    while($selectRolesRow = $selectRolesStmt->fetch())
     {
+        if($i>0) 
+        {
+            $selectUsersWorkerRow["roles"].=", ";
+        }
 
-        if($i>0) $r["roles"].=", ";
-        $r["roles"].= $innerrow["rolename"];
+        if(trim($selectRolesRow["role_humanname"])=="")
+        {
+             $selectUsersWorkerRow["roles"].=$selectRolesRow["rolename"];
+        }
+        else
+        {
+            $selectUsersWorkerRow["roles"].= $selectRolesRow["role_humanname"];
+        }
         $i++;
     }
-    $r["linkid"] = $r["id"];
-    $entries[] = $r;
+    $selectUsersWorkerRow["linkid"] = $selectUsersWorkerRow["id"];
+    $entries[] = $selectUsersWorkerRow;
 }
 $smarty->assign('entries',$entries);
