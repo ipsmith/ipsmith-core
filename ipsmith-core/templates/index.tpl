@@ -41,7 +41,7 @@
 
     <footer class="footer">
       <div class="container">
-        <p>&copy; 2012 <a href="http://ipsmith.org" target="_blank">IPSmith Project</a> and <a href="https://twitter.com/mrbendig" target="_blank">@mrbendig</a>.</p>
+        <p>&copy; 2012-2013 <a href="http://ipsmith.org" target="_blank">IPSmith Project</a> and <a href="https://twitter.com/mrbendig" target="_blank">@mrbendig</a>.</p>
         <p>Code licensed under <a href="{$config.baseurl}/about/license.html">GNU LESSER GENERAL PUBLIC LICENSE 3</a>.</p>
         <p><a href="http://glyphicons.com">Glyphicons Free</a> licensed under <a href="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.</p>
         <ul class="footer-links">
