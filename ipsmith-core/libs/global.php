@@ -90,11 +90,7 @@ if(empty($sessionid) || !isset($_SESSION["userdata"]))
 
 if(!isset($_SESSION["userdata"]))
 {
-  $_SESSION["userdata"] = array();
-  $_SESSION["userdata"]["id"] = 0;
-  $_SESSION["userdata"]["username"] = "guest";
-  $_SESSION["userdata"]["language"] = "de";
-  $_SESSION["userdata"]["config"] = $config["defaultsettings"];
+  PermissionManager::SetDefaultSession();
 }
 
 $translation = new TranslationManager($config);

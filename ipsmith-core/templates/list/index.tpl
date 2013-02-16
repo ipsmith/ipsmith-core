@@ -1,6 +1,7 @@
 <ul class="nav nav-tabs">
+    <li {if $catid eq 0} class="active"{/if}><a href="{$config.baseurl}/list/index.html?catid=0&amp;locationid={$locationid}">ALLE</a></li>
 {foreach $currentcategories as $cat }
-    <li {if $catid eq $cat.id} class="active"{/if}><a href="{$config.baseurl}/list/index.html?catid={$cat.id}&amp;locationid={$locationid}">{$cat.catname}</a></li>
+    <li {if $catid eq $cat.id} catidlass="active"{/if}><a href="{$config.baseurl}/list/index.html?catid={$cat.id}&amp;locationid={$locationid}">{$cat.catname}</a></li>
 {/foreach}
 </ul>
 

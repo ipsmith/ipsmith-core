@@ -21,6 +21,7 @@
  * IPSmith mailing list. Go to http://www.ipsmith.org/lists
  *
  **/
+
 $selectLogsQuery = 'SELECT * FROM tablelog WHERE tablename=:tablename '
                  . 'AND tableid=:tableid ORDER BY id DESC;';
 

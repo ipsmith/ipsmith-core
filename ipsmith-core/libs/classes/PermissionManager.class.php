@@ -24,6 +24,56 @@
 class PermissionManager
 {
 
+    public static function SetDefaultSession()
+    {
+        global $config;
+
+        $_SESSION["userdata"] = array();
+        $_SESSION["userdata"]["id"] = 0;
+        $_SESSION["userdata"]["username"] = "guest";
+        $_SESSION["userdata"]["language"] = "de";
+        $_SESSION["userdata"]["config"] = $config["defaultsettings"];
+    }
+    public static function GetMissingRoles($_module,$_page)
+    {
+        global $doctrineConnection;
+
+
+        $getRoleDataQuery = "SELECT * FROM roles WHERE name=:name;";
+        $getRoleDataStmt = $doctrineConnection->prepare($getRoleDataQuery);
+
+        $getRequiredRolesQuery = "SELECT * FROM permissions_matrix WHERE matrixtype=:matrixtype AND module=:module AND page=:page ;";
+
+        $getRequiredRolesStmt = $doctrineConnection->prepare($getRequiredRolesQuery);
+
+        $getRequiredRolesStmt->bindValue('matrixtype', 'required');
+        $getRequiredRolesStmt->bindValue('module',$_module);
+        $getRequiredRolesStmt->bindValue('page',$_page);
+
+        $getRequiredRolesStmt->execute();
+
+        $missingRoles = array();
+
+        while($requiredRolesRow = $getRequiredRolesStmt->fetch())
+        {
+            if(!PermissionManager::CurrentUserHasRole($requiredRolesRow['role']))
+            {
+                if(!in_array($requiredRolesRow['role'],$missingRoles))
+                {
+                    $getRoleDataStmt->bindValue('name',$requiredRolesRow['role']);
+                    $getRoleDataStmt->execute();
+
+                    if($rowDataRow = $getRoleDataStmt->fetch())
+                    {
+                        $missingRoles[] =  $rowDataRow;
+                    }
+                }
+            }
+        }
+
+        return $missingRoles;
+    }
+
     public static function RequirePermissions($_module,$_page)
     {
         global $doctrineConnection;
@@ -31,8 +81,8 @@ class PermissionManager
         if(
             ($_module!='error' && $_page!='catch') &&
             ($_module!='user' && $_page!='login') &&
-            ($_module!='user' && $_page!='logout') &&
-            ($_module!='about' && $_page!='license')
+            ($_module!='user' && $_page!='logout')  &&
+            ($_module!='user' && $_page!='missingpermissions')
             )
         {
             return true;

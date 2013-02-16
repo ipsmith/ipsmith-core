@@ -66,10 +66,21 @@ $entries = array();
 $selectEntryTypeQuery = 'SELECT * FROM types WHERE id=:typeid';
 $selectEntryTypeStmt = $doctrineConnection->prepare($selectEntryTypeQuery);
 
-$selectEntriesQuery = 'SELECT * FROM entries WHERE locationid= :locationid AND catid= :catid';
+if($catid==0)
+{
+	$selectEntriesQuery = 'SELECT * FROM entries WHERE locationid= :locationid';
+}
+else
+{
+	$selectEntriesQuery = 'SELECT * FROM entries WHERE locationid= :locationid AND catid= :catid';
+}
+
 $selectEntriesStmt = $doctrineConnection->prepare($selectEntriesQuery);
 $selectEntriesStmt->bindValue('locationid', $requestedlocationid);
-$selectEntriesStmt->bindValue('catid',$catid);
+if($catid!=0)
+{
+	$selectEntriesStmt->bindValue('catid',$catid);
+}
 $selectEntriesStmt->execute();
 while($row = $selectEntriesStmt->fetch())
 {
@@ -83,6 +94,16 @@ while($row = $selectEntriesStmt->fetch())
 	}
 
      $entries[] = $_row;
+}
+
+if(isset($_REQUEST["format"]) && $_REQUEST["format"]=='json')
+{
+	header('Cache-Control: no-cache, must-revalidate');
+	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+	header('Content-type: application/json');
+
+	echo json_encode($entries);
+	exit(0);
 }
 
 $smarty->assign('currentcategories',$currentcategories);
