@@ -121,7 +121,7 @@ class UserSetting extends BaseObject
 	    return $objects;
 	}
 
-	public stastic function GetByUserIdAndSettingsname($_userid,$_settingsname)
+	public static function GetByUserIdAndSettingsname($_userid,$_settingsname)
 	{
 		$object = new UserSetting();
 		$object->LoadByUserIdAndName($_userid,$_settingsname);
