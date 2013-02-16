@@ -6,6 +6,7 @@
 *.out
 public/.htaccess
 public/.htpasswd
+ipsmith-core/libs/classes/dbobjects/template.dbo.php
 ipsmith-core/libs/config.inc.php
 *.tpl.php
 ipsmith-core/logs/*.log

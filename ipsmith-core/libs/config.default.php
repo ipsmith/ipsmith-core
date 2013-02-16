@@ -32,9 +32,11 @@ $defaultconfig["baselanguage"] = 'de';
 $defaultconfig["db"] = array();
 $defaultconfig["db"]["host"] = "127.0.0.1";
 $defaultconfig["db"]["user"] = "root";
-$defaultconfig["db"]["pass"] = "";
+$defaultconfig["db"]["password"] = "";
 $defaultconfig["db"]["name"] = "ipsmith";
 $defaultconfig["db"]["driver"] = "pdo_mysql";
+$defaultconfig["db"]["charset"] = "utf8";
+$defaultconfig["db"]["driverOptions"] = array(1002=>'SET NAMES utf8');
 
 $defaultconfig["template"] = array();
 $defaultconfig["template"]["debugging"] = false;

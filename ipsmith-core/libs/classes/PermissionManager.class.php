@@ -40,11 +40,11 @@ class PermissionManager
 
 
         $getRoleDataQuery = "SELECT * FROM roles WHERE name=:name;";
-        $getRoleDataStmt = $doctrineConnection->prepare($getRoleDataQuery);
+        $getRoleDataStmt = Database::current()->prepare($getRoleDataQuery);
 
         $getRequiredRolesQuery = "SELECT * FROM permissions_matrix WHERE matrixtype=:matrixtype AND module=:module AND page=:page ;";
 
-        $getRequiredRolesStmt = $doctrineConnection->prepare($getRequiredRolesQuery);
+        $getRequiredRolesStmt = Database::current()->prepare($getRequiredRolesQuery);
 
         $getRequiredRolesStmt->bindValue('matrixtype', 'required');
         $getRequiredRolesStmt->bindValue('module',$_module);
@@ -109,7 +109,7 @@ class PermissionManager
 
 		$q = "SELECT * FROM VIEW_users_permissions WHERE userid= :userid AND (permissionname= :permissionname OR  permissionname='can_do_everything');";
 
-        $stmt = $doctrineConnection->prepare($q);
+        $stmt = Database::current()->prepare($q);
 
         $stmt->bindValue('userid',$userid);
         $stmt->bindValue('permissionname',$permissionname);
@@ -148,7 +148,7 @@ class PermissionManager
             $_SESSION['useraccess']['userid']       =$_SESSION['userdata']['id'];
 
             $selectUserAccessQuery = 'SELECT * FROM VIEW_users_permissions WHERE userid=:userid;';
-            $selectUserAccessStmt = $doctrineConnection->prepare($selectUserAccessQuery);
+            $selectUserAccessStmt = Database::current()->prepare($selectUserAccessQuery);
             $selectUserAccessStmt->bindValue('userid',$userid);
 
             $selectUserAccessStmt->execute();
@@ -173,7 +173,7 @@ class PermissionManager
         global $doctrineConnection;
 
         $q = 'SELECT * FROM VIEW_users_permissions WHERE userid= :userid and rolename= :rolename';
-        $stmt = $doctrineConnection->prepare($q);
+        $stmt = Database::current()->prepare($q);
 
         $stmt->bindValue('userid',$userid);
         $stmt->bindValue('rolename',$rolename);

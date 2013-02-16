@@ -24,10 +24,37 @@
 use Doctrine\Common\ClassLoader;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL as ORM;
+require_once ( LIB_DIR . '/loghandler-doctrine.php');
 
-require ( LIB_DIR.'/3rdparty/doctrine-dbal/Doctrine/Common/ClassLoader.php');
+class Database
+{
+	public static $dbconfig = null;
+	public static $dbconnection = null;
 
-$classLoader = new ClassLoader('Doctrine', LIB_DIR.'/3rdparty/doctrine-dbal/');
-$classLoader->register();
+	public function __construct()
+	{
+		$this->connect();
+	}
+	public static function connect()
+	{
 
+		global $LogHandler, $config;
+		self::$dbconfig = new \Doctrine\DBAL\Configuration();
 
+		$databaseLogger = new IPSDebugStack($LogHandler->getDbLogger());
+		self::$dbconfig->setSQLLogger($databaseLogger );
+
+		self::$dbconnection = DriverManager::getConnection( $config["db"], self::$dbconfig );
+		self::$dbconnection->driverOptions = array(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	}
+
+	public static function current()
+	{
+		if(is_null(self::$dbconnection))
+		{
+			Database::connect();
+		}
+
+		return self::$dbconnection;
+	}
+}

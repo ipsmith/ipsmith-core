@@ -15,19 +15,20 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * or see http://www.ipsmith.org/docs/license
  *
  * For questions, help, comments, discussion, etc., please join the
  * IPSmith mailing list. Go to http://www.ipsmith.org/lists
  *
  **/
 
-use Doctrine\Common\ClassLoader;
-use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL as ORM;
+include(dirname(__FILE__).'/../ipsmith-core/libs/global.php');
 
-require ( LIB_DIR.'/3rdparty/doctrine-dbal/Doctrine/Common/ClassLoader.php');
-
-$classLoader = new ClassLoader('Doctrine', LIB_DIR.'/3rdparty/doctrine-dbal/');
-$classLoader->register();
-
+$loadQuery = "SELECT * FROM users";
+$loadStmt = Database::current()->prepare($loadQuery);
+$loadStmt->execute();
+while($row = $loadStmt->fetch())
+{
+		print_r($row);
+}
 
