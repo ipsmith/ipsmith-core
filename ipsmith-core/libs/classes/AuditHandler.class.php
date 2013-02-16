@@ -23,7 +23,7 @@
 
 class AuditHandler
 {
-    public static function RunAction($actionname)
+    public static function FireEvent($method,$params)
     {
 
     }

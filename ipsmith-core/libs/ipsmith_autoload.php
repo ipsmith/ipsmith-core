@@ -29,7 +29,7 @@ function ipsmith_autoload($class)
         require_once(LIB_DIR.'/classes/' . $class . '.class.php');
     }
 
-    if ( file_exists(LIB_DIR.'/classes/dbobjects/' . $class . '.dbo.php') )
+    if ( file_exists(LIB_DIR.'/classes/dbobjects/' . $class . '.class.php') )
     {
         require_once(LIB_DIR.'/classes/dbobjects/' . $class . '.class.php');
     }

@@ -36,9 +36,9 @@ require ( LIB_DIR . '/loghandler.php');
 
 $LogHandler = new LogHandlerClass();
 
-require ( LIB_DIR . '/doctrine_loader.php');
-require ( LIB_DIR .'/ipsmith_autoload.php');
-require ( LIB_DIR .'/helper_functions.php');
+require ( LIB_DIR . '/doctrine_loader.php' );
+require ( LIB_DIR . '/ipsmith_autoload.php' );
+require ( LIB_DIR . '/helper_functions.php' );
 
 $smarty = new Smarty;
 

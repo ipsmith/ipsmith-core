@@ -69,7 +69,7 @@ class Category extends BaseObject
 		$this->ordernumber = $row["ordernumber"];
 	}
 
-	public function LoadAll()
+	public static function LoadAll()
 	{
 		AuditHandler::FireEvent(__METHOD__,array("param-id"=>$_id));
 
@@ -87,7 +87,7 @@ class Category extends BaseObject
 	    return $objects;
 	}
 
-	public stastic function GetAll()
+	public static function GetAll()
 	{
 		return self::LoadAll();
 	}

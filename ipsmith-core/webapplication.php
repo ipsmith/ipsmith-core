@@ -72,13 +72,7 @@ try
 	$globallocations = array();
 
 	//--- always used data
-	$q = 'SELECT * FROM locations ORDER BY ordernumber';
-
-	$stmt = $doctrineConnection->query($q);
-	while($row = $stmt->fetch())
-	{
-		$globallocations[] = $row;
-	}
+	$globallocations = Location::GetAll();
 
 	$smarty->assign('globallocations',$globallocations);
 	$smarty->assign('currentTitle',$webapp['title']);

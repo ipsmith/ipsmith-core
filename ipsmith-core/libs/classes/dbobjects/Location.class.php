@@ -92,9 +92,9 @@ class Location extends BaseObject
 	    }
 	}
 
-	public function LoadAll()
+	public static function LoadAll()
 	{
-		AuditHandler::FireEvent(__METHOD__,array("param-id"=>$_id));
+		AuditHandler::FireEvent(__METHOD__,null);
 
 		$loadQuery = "SELECT id FROM locations ORDER BY ordernumber";
 		$loadStmt = Database::current()->prepare($loadQuery);
@@ -110,7 +110,7 @@ class Location extends BaseObject
 	    return $objects;
 	}
 
-	public stastic function GetAll()
+	public static function GetAll()
 	{
 		return self::LoadAll();
 	}
