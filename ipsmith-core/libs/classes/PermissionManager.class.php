@@ -34,6 +34,18 @@ class PermissionManager
         $_SESSION["userdata"]["language"] = "de";
         $_SESSION["userdata"]["config"] = $config["defaultsettings"];
     }
+
+    public static function SetConsoleSession()
+    {
+        global $config;
+
+        $_SESSION["userdata"] = array();
+        $_SESSION["userdata"]["id"] = 0;
+        $_SESSION["userdata"]["username"] = "console";
+        $_SESSION["userdata"]["language"] = "de";
+        $_SESSION["userdata"]["config"] = $config["defaultsettings"];
+    }
+
     public static function GetMissingRoles($_module,$_page)
     {
         global $doctrineConnection;
