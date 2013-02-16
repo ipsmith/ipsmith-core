@@ -96,9 +96,8 @@ class Location extends BaseObject
 	{
 		AuditHandler::FireEvent(__METHOD__,array("param-id"=>$_id));
 
-		$loadQuery = "SELECT * FROM locations ORDER BY ordernumber";
+		$loadQuery = "SELECT id FROM locations ORDER BY ordernumber";
 		$loadStmt = Database::current()->prepare($loadQuery);
-		$loadStmt->bindValue('id',$_id);
 		$loadStmt->execute();
 
 		$objects = array();

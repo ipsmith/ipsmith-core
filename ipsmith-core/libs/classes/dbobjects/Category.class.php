@@ -75,7 +75,6 @@ class Category extends BaseObject
 
 		$loadQuery = "SELECT id FROM categories ORDER BY ordernumber";
 		$loadStmt = Database::current()->prepare($loadQuery);
-		$loadStmt->bindValue('id',$_id);
 		$loadStmt->execute();
 
 		$objects = array();
