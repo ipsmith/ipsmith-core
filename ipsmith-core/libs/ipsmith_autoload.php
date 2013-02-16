@@ -26,12 +26,12 @@ function ipsmith_autoload($class)
 
     if(file_exists(LIB_DIR.'/classes/' . $class . '.class.php'))
     {
-        include(LIB_DIR.'/classes/' . $class . '.class.php');
+        require_once(LIB_DIR.'/classes/' . $class . '.class.php');
     }
 
-    if ( file_exists(LIB_DIR.'/classes/dbos/' . $class . '.dbo.php') )
+    if ( file_exists(LIB_DIR.'/classes/dbobjects/' . $class . '.dbo.php') )
     {
-        file_exists(LIB_DIR.'/classes/dbos/' . $class . '.dbo.php');
+        require_once(LIB_DIR.'/classes/dbobjects/' . $class . '.class.php');
     }
 }
 
