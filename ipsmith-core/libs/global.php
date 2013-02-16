@@ -1,6 +1,6 @@
 <?php
 /**
- * Project:     IPSmith - Free ip address managing tool
+ * Project:	 IPSmith - Free ip address managing tool
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -36,43 +36,14 @@ require ( LIB_DIR . '/loghandler.php');
 
 $LogHandler = new LogHandlerClass();
 
-use Doctrine\Common\ClassLoader;
-use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL as ORM;
-
-require ( LIB_DIR.'/3rdparty/doctrine-dbal/Doctrine/Common/ClassLoader.php');
-
-
-$classLoader = new ClassLoader('Doctrine', LIB_DIR.'/3rdparty/doctrine-dbal/');
-$classLoader->register();
-require ( LIB_DIR . '/loghandler-doctrine.php');
-$doctrineConfig = new \Doctrine\DBAL\Configuration();
-
-$databaseLogger = new IPSDebugStack($LogHandler->getDbLogger());
-$doctrineConfig->setSQLLogger($databaseLogger );
-
-$doctrineConnectionParams = array(
-                                  'dbname' => $config["db"]["name"],
-                                  'user' => $config["db"]["user"],
-                                  'password' => $config["db"]["pass"],
-                                  'host' => $config["db"]["host"],
-                                  'driver' => $config["db"]["driver"],
-                                  'charset' => 'utf8',
-                                  'driverOptions' => array(
-                                                           1002=>'SET NAMES utf8'
-                                                           )
-);
-
-$doctrineConnection = DriverManager::getConnection($doctrineConnectionParams, $doctrineConfig);
-$doctrineConnection->driverOptions = array(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
+require ( LIB_DIR . '/doctrine_loader.php');
 require ( LIB_DIR .'/ipsmith_autoload.php');
 require ( LIB_DIR .'/helper_functions.php');
 
 $smarty = new Smarty;
 
-$smarty->debugging = $config["template"]["debugging"];
-$smarty->caching = $config["template"]["caching"];
+$smarty->debugging	 = $config["template"]["debugging"];
+$smarty->caching      = $config["template"]["caching"];
 $smarty->force_compile = $config["template"]["force_compile"];
 $smarty->use_sub_dirs = $config["template"]["use_sub_dirs"];
 $smarty->cache_lifetime = $config["template"]["cache_lifetime"];
@@ -93,15 +64,6 @@ if(!isset($_SESSION["userdata"]))
   PermissionManager::SetDefaultSession();
 }
 
-$translation = new TranslationManager($config);
-$translation->load();
-
 $system = array("currentversion"=>'0.0.1','versiontype'=>'dev');
 
 PermissionManager::Prefetch($_SESSION['userdata']['id']);
-
-if(isset($_REQUEST["from"]))
-{
-  $LogHandler->Log("Current Session-data", IPSMITH_INFO, array('data-session'=>$_SESSION));
-}
-
