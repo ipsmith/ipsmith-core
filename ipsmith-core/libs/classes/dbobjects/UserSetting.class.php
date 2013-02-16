@@ -125,7 +125,7 @@ class UserSetting extends BaseObject
 	{
 		$object = new UserSetting();
 		$object->LoadByUserIdAndName($_userid,$_settingsname);
-		return $objet;
+		return $object;
 	}
 
 	public static function LoadAll()
