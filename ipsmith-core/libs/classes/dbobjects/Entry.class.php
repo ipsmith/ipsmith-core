@@ -134,6 +134,22 @@ class Entry extends BaseObject
 	    }
 	}
 
+	public function RemoveFromExports()
+	{
+		$deleteAssignmentQuery = 'DELETE FROM entry2export WHERE dataid=:dataid ;';
+	    $deleteAssignmentStmt = Database::current()->prepare($deleteAssignmentQuery);
+	    $deleteAssignmentStmt->bindValue('dataid',$this->id);
+	    $deleteAssignmentStmt->execute();
+	}
+
+	public function AddToExport($export)
+	{
+		$exportQuery = "INSERT INTO entry2export (dataid,exportid) VALUES (:dataid, :exportid)";
+		$exportStmt = Database::current()->prepare($deleteAssignmentQuery);
+		$exportStmt->bindValue('dataid',$this->id);
+		$exportStmt->bindValue('exportid',$export);
+		$exportStmt->execute();
+	}
 
 	public static function LoadAll()
 	{
