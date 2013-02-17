@@ -29,6 +29,7 @@ class IPAddress
     public $AddressRecord = "A";
     public $DECIMAL = 0;
     public $IP = 0;
+    public $IPType = "IPv4";
 
     function __construct($value)
     {
@@ -40,7 +41,15 @@ class IPAddress
         $this->IsIPv6 = (!$this->IsIPv4);
 
         if($this->IsIPv6)
+        {
             $this->AddressRecord = "AAAA";
+            $this->IPType = "IPv6";
+        }
+        else
+        {
+            $this->AddressRecord = "A";
+            $this->IPType = "IPv4";
+        }
     }
 
     /**
