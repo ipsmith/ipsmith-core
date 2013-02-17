@@ -1,3 +1,3 @@
- <span class="label" {if $myentry.typeinfo.bgcolor_hex neq ""}style="background-color:{$myentry.typeinfo.bgcolor_hex}"{/if}>
- 	{$myentry.typeinfo.typename}
+ <span class="label" {if $entry->type->bgcolor_hex neq ""}style="background-color:{$entry->type->bgcolor_hex}"{/if}>
+ 	{$entry->type->typename}
  </span>

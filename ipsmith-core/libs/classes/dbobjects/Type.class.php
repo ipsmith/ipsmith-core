@@ -21,13 +21,20 @@
  *
  **/
 
-class UserSetting extends BaseObject
+class Type extends BaseObject
 {
-	public $tablename = "user_settings";
+	public $tablename = "types";
 
-	public $userid 			= 0;
-	public $settingsname  	= null;
-	public $settingsvalue  	= null;
+	public $typename = null;
+	public $bgcolor_hex = null;
+	public $bgcolor_r = 0;
+	public $bgcolor_g = 0;
+	public $bgcolor_b = 0;
+	public $fgcolor_hex = null;
+	public $fgcolor_r = 0;
+	public $fgcolor_g = 0;
+	public $fgcolor_b = 0;
+	public $description = null;
 
 	public function Save()
 	{
@@ -36,19 +43,27 @@ class UserSetting extends BaseObject
 
 		if($this->IsValid())
 		{
-			$saveQuery = "UPDATE ".$this->tablename." SET settingsvalue=:settingsvalue, settingsname=:settingsname, userid=:userid WHERE id=:id;";
+			$saveQuery = "UPDATE ".$this->tablename." SET typename=:typename, bgcolor_hex=:bgcolor_hex, bgcolor_r=:bgcolor_r, bgcolor_g=:bgcolor_g, bgcolor_b=:bgcolor_b, fgcolor_hex=:fgcolor_hex, fgcolor_r=:fgcolor_r, fgcolor_g=:fgcolor_g, fgcolor_b=:fgcolor_b, description=:description WHERE id=:id;";
 			$saveStmt = Database::current()->prepare($saveQuery);
 			$saveStmt->bindValue('id',$this->id);
 		}
 		else
 		{
-			$saveQuery = "INSERT INTO ".$this->tablename." (settingsvalue, settingsname, userid) VALUES (:settingsvalue, :settingsname, :userid);";
+			$saveQuery = "INSERT INTO ".$this->tablename." (typename, bgcolor_hex, bgcolor_r, bgcolor_g, bgcolor_b, fgcolor_hex, fgcolor_r, fgcolor_g, fgcolor_b, description) VALUES (:typename, :bgcolor_hex, :bgcolor_r, :bgcolor_g, :bgcolor_b, :fgcolor_hex, :fgcolor_r, :fgcolor_g, :fgcolor_b, :description);";
 			$saveStmt = Database::current()->prepare($saveQuery);
 		}
 
-		$saveStmt->bindValue('settingsname',$this->settingsname);
-		$saveStmt->bindValue('settingsvalue',$this->settingsvalue);
-		$saveStmt->bindValue('userid',$this->userid);
+		$saveStmt->bindValue('typename',$this->typename);
+		$saveStmt->bindValue('bgcolor_hex',$this->bgcolor_hex);
+		$saveStmt->bindValue('bgcolor_r',$this->bgcolor_r);
+		$saveStmt->bindValue('bgcolor_g',$this->bgcolor_g);
+		$saveStmt->bindValue('bgcolor_b',$this->bgcolor_b);
+		$saveStmt->bindValue('fgcolor_hex',$this->fgcolor_hex);
+		$saveStmt->bindValue('fgcolor_r',$this->fgcolor_r);
+		$saveStmt->bindValue('fgcolor_g',$this->fgcolor_g);
+		$saveStmt->bindValue('fgcolor_b',$this->fgcolor_b);
+		$saveStmt->bindValue('description',$this->description);
+
 		$saveStmt->execute();
 
 		if(!$isupdate)
@@ -66,9 +81,16 @@ class UserSetting extends BaseObject
 		parent::LoadMetaData($row);
 
 		//-- EntryData
-		$this->userid= $row["userid"];
-		$this->settingsname= $row["settingsname"];
-		$this->settingsvalue = $row["settingsvalue"];
+		$this->typename= $row["typename"];
+		$this->bgcolor_hex= $row["bgcolor_hex"];
+		$this->bgcolor_r= $row["bgcolor_r"];
+		$this->bgcolor_g= $row["bgcolor_g"];
+		$this->bgcolor_g= $row["bgcolor_g"];
+		$this->fgcolor_hex= $row["fgcolor_hex"];
+		$this->fgcolor_r= $row["fgcolor_r"];
+		$this->fgcolor_g= $row["fgcolor_g"];
+		$this->fgcolor_b= $row["fgcolor_b"];
+		$this->description= $row["description"];
 	}
 
 	public function LoadById($_id)
@@ -86,48 +108,6 @@ class UserSetting extends BaseObject
 	    }
 	}
 
-	public function LoadByUserIdAndName($_userid, $_settingsname)
-	{
-		AuditHandler::FireEvent(__METHOD__,array("param-userid"=>$_userid, "param-settingsname"=>$_settingsname));
-
-		$loadQuery = "SELECT * FROM ".$this->tablename." WHERE userid=:userid AND settingsname=:settingsname";
-		$loadStmt = Database::current()->prepare($loadQuery);
-		$loadStmt->bindValue('userid',$_userid);
-		$loadStmt->bindValue('settingsname',$_settingsname);
-		$loadStmt->execute();
-
-	    if($row = $loadStmt->fetch())
-	    {
-	    		$this->LoadData($row);
-	    }
-	}
-
-	public static function GetByUserId($_userid)
-	{
-		AuditHandler::FireEvent(__METHOD__,array("param-userid"=>$_userid));
-
-		$loadQuery = "SELECT id FROM user_settings WHERE userid=:userid";
-		$loadStmt = Database::current()->prepare($loadQuery);
-		$loadStmt->bindValue('userid',$_userid);
-		$loadStmt->execute();
-		$objects = array();
-	    while($row = $loadStmt->fetch())
-	    {
-	    	$object = new UserSetting();
-	    	$object->LoadByID($row["id"]);
-	    	$objects[] = $object;
-	    }
-
-	    return $objects;
-	}
-
-	public static function GetByUserIdAndSettingsname($_userid,$_settingsname)
-	{
-		$object = new UserSetting();
-		$object->LoadByUserIdAndName($_userid,$_settingsname);
-		return $object;
-	}
-
 	public static function LoadAll()
 	{
 		AuditHandler::FireEvent(__METHOD__,null);
@@ -139,7 +119,7 @@ class UserSetting extends BaseObject
 		$objects = array();
 	    while($row = $loadStmt->fetch())
 	    {
-	    	$object = new UserSetting();
+	    	$object = new Type();
 	    	$object->LoadByID($row["id"]);
 	    	$objects[] = $object;
 	    }
@@ -153,7 +133,7 @@ class UserSetting extends BaseObject
 
 	public static function GetById($_id)
 	{
-		$object = new UserSetting();
+		$object = new Type();
 		$object ->LoadById($_id);
 		return $object;
 	}

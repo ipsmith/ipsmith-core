@@ -111,17 +111,22 @@ class Ping extends BaseObject
 
 		$loadQuery = "SELECT * FROM ".$this->tablename." WHERE entryid=:entryid";
 		$loadStmt = Database::current()->prepare($loadQuery);
-          $loadStmt->bindValue('id',$_id);
+          $loadStmt->bindValue('entryid',$_entryid);
           $loadStmt->execute();
 
 	    if($row = $loadStmt->fetch())
 	    {
 	    		$this->LoadData($row);
 	    }
+	    else
+	    {
+	    	$this->LoadData(array('entryid'=>$_entryid,'result'=>-2));
+	    }
+
 	}
 	public static function GetByEntryId($_entryid)
 	{
-		$object = new UserSetting();
+		$object = new Ping();
 		$object->LoadByEntryId($_entryid);
 		return $object;
 	}
@@ -129,7 +134,7 @@ class Ping extends BaseObject
 
 	public static function GetById($_id)
 	{
-		$object = new UserSetting();
+		$object = new Ping();
 		$object ->LoadById($_id);
 		return $object;
 	}

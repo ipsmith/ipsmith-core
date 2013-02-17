@@ -82,7 +82,7 @@ class BaseObject
 			$metaDataQuery = "UPDATE ".$_tablename." ";
 			if($_isupdate)
 			{
-				$metaDataQuery.="SET modifiedby=:currentuser  ";
+				$metaDataQuery.="SET modifiedby=:currentuser, modifiedat=CURRENT_TIMESTAMP ";
 			}
 			else
 			{
@@ -97,13 +97,12 @@ class BaseObject
 			$metaDataQuery.= " WHERE id=:id";
 
 			$metaDataStmt = Database::current()->prepare($metaDataQuery);
-			if($this->guid==null)
+			if($this->guid==null || $this->guid=="")
 			{
 				$metaDataStmt->bindValue('guid',GuidGenerator::Create($_tablename));
 			}
 			$metaDataStmt->bindValue('currentuser',$_SESSION["userdata"]["username"]);
 			$metaDataStmt->bindValue('id',$this->id);
           	$metaDataStmt->execute();
-
 	}
 }

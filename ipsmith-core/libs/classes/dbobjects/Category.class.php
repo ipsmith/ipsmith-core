@@ -69,6 +69,24 @@ class Category extends BaseObject
 		$this->ordernumber = $row["ordernumber"];
 	}
 
+	public static function GetByLocationId($_locationid)
+	{
+		AuditHandler::FireEvent(__METHOD__,array("param-locationid"=>$_locationid));
+
+		$loadQuery = "SELECT categories.* FROM categories LEFT JOIN entries on categories.id=entries.catid WHERE entries.locationid=:locationid GROUP BY categories.id ORDER BY categories.ordernumber";
+		$loadStmt = Database::current()->prepare($loadQuery);
+		$loadStmt->bindValue('locationid',$_locationid);
+		$loadStmt->execute();
+
+		$objects = array();
+	    while($row = $loadStmt->fetch())
+	    {
+	    	$object = new Category();
+	    	$object->LoadByID($row["id"]);
+	    	$objects[] = $object;
+	    }
+	    return $objects;
+	}
 	public static function LoadAll()
 	{
 		AuditHandler::FireEvent(__METHOD__,array("param-id"=>$_id));

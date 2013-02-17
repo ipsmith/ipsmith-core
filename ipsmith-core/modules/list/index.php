@@ -24,6 +24,7 @@
 
 $requestedlocationid = 1;
 $catid = 1;
+$currentlocation = null;
 
 if(Isset($_REQUEST["locationid"]))
 {
@@ -31,79 +32,31 @@ if(Isset($_REQUEST["locationid"]))
 }
 $smarty->assign("locationid",$requestedlocationid);
 
-$q = "SELECT * FROM locations WHERE id= :id ";
-
-$stmt = $doctrineConnection->prepare($q);
-$stmt->bindValue("id", $requestedlocationid);
-$stmt->execute();
-if($row = $stmt->fetch())
-{
-    $catid = $row["preselectedcat"];
-}
+$currentlocation = Location::GetById($requestedlocationid);
 
 if(isset($_REQUEST["catid"]))
 {
     $catid = $_REQUEST["catid"];
 }
-
+else
+{
+	if($currentlocation->IsValid())
+    	$catid = $currentlocation->preselectedcat;
+}
 
 $smarty->assign("catid",$catid);
 
-$currentcategories = array();
-$q = "SELECT * FROM categories WHERE id in (SELECT catid FROM entries WHERE locationid= :locationid ) ORDER by ordernumber";
-$stmt = $doctrineConnection->prepare($q);
-$stmt->bindValue("locationid", $requestedlocationid);
-$stmt->execute();
-while($row = $stmt->fetch())
-{
-    $currentcategories[] = $row;
-}
-
-
+$currentcategories = Category::GetByLocationId($requestedlocationid);
 
 $entries = array();
 
-$selectEntryTypeQuery = 'SELECT * FROM types WHERE id=:typeid';
-$selectEntryTypeStmt = $doctrineConnection->prepare($selectEntryTypeQuery);
-
 if($catid==0)
 {
-	$selectEntriesQuery = 'SELECT * FROM entries WHERE locationid= :locationid';
+	$entries = Entry::GetByLocationId($requestedlocationid);
 }
 else
 {
-	$selectEntriesQuery = 'SELECT * FROM entries WHERE locationid= :locationid AND catid= :catid';
-}
-
-$selectEntriesStmt = $doctrineConnection->prepare($selectEntriesQuery);
-$selectEntriesStmt->bindValue('locationid', $requestedlocationid);
-if($catid!=0)
-{
-	$selectEntriesStmt->bindValue('catid',$catid);
-}
-$selectEntriesStmt->execute();
-while($row = $selectEntriesStmt->fetch())
-{
-	$_row = $row;
-
-	$selectEntryTypeStmt->bindValue('typeid',$row["typeid"]);
-	$selectEntryTypeStmt->execute();
-	if($typeinforow = $selectEntryTypeStmt->fetch())
-	{
-		$_row["typeinfo"] = $typeinforow;
-	}
-
-     $entries[] = $_row;
-}
-
-if(isset($_REQUEST["format"]) && $_REQUEST["format"]=='json')
-{
-	header('Cache-Control: no-cache, must-revalidate');
-	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-	header('Content-type: application/json');
-
-	echo json_encode($entries);
-	exit(0);
+	$entries = Entry::GetByLocationAndCategory($requestedlocationid,$catid);
 }
 
 $smarty->assign('currentcategories',$currentcategories);

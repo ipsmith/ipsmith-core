@@ -55,19 +55,19 @@ class Entry extends BaseObject
 
 		if($this->IsValid())
 		{
-			$saveQuery = "UPDATE ".$this->tablename." SET ip=:ip, ipnum=:ipnum, mac=:mac, hostname=:hostname, fqdn=:fqdn, addressrecord=:addressrecord, iptype=:iptype, color_hex=:color_hex, color_r=:color_r, color_g=:color_g, color_b=:color_b, iconpath=:iconpath, locationid=:locationid. catid=:catid, typeid=:typeid WHERE id=:id;";
+			$saveQuery = "UPDATE ".$this->tablename." SET ip=:ip, ipnum=:ipnum, macaddress=:macaddress, hostname=:hostname, fqdn=:fqdn, addressrecord=:addressrecord, iptype=:iptype, color_hex=:color_hex, color_r=:color_r, color_g=:color_g, color_b=:color_b, iconpath=:iconpath, locationid=:locationid. catid=:catid, typeid=:typeid WHERE id=:id;";
 			$saveStmt = Database::current()->prepare($saveQuery);
 			$saveStmt->bindValue('id',$this->id);
 		}
 		else
 		{
-			$saveQuery = "INSERT INTO ".$this->tablename." (ip, ipnum, mac, hostname, fqdn, addressrecord, iptype, color_hex, color_r, color_g, color_b, iconpath, locationid, catid, typeid) VALUES (:ip, :ipnum, :mac, :hostname, :fqdn, :addressrecord, :iptype, :color_hex, :color_r, :color_g, :color_b, :iconpath, :locationid, :catid, :typeid);";
+			$saveQuery = "INSERT INTO ".$this->tablename." (ip, ipnum, macaddress, hostname, fqdn, addressrecord, iptype, color_hex, color_r, color_g, color_b, iconpath, locationid, catid, typeid) VALUES (:ip, :ipnum, :macaddress, :hostname, :fqdn, :addressrecord, :iptype, :color_hex, :color_r, :color_g, :color_b, :iconpath, :locationid, :catid, :typeid);";
 			$saveStmt = Database::current()->prepare($saveQuery);
 		}
 
 		$saveStmt->bindValue('ip',$this->ip);
 		$saveStmt->bindValue('ipnum',$address->DECIMAL);
-		$saveStmt->bindValue('mac',$this->mac);
+		$saveStmt->bindValue('macaddress',$this->macaddress);
 		$saveStmt->bindValue('hostname',$this->hostname);
 		$saveStmt->bindValue('addressrecord',$address->AddressRecord);
 		$saveStmt->bindValue('iptype',$address->IPType);
@@ -98,7 +98,7 @@ class Entry extends BaseObject
 		//-- EntryData
 		$this->ip = $row["ip"];
 		$this->ipnum = $row["ipnum"];
-		$this->mac = $row["mac"];
+		$this->macaddress = $row["macaddress"];
 		$this->hostname = $row["hostname"];
 		$this->addressrecord = $row["addressrecord"];
 		$this->iptype = $row["iptype"];
@@ -112,7 +112,6 @@ class Entry extends BaseObject
 		$this->typeid = $row["typeid"];
 
 		$this->address = new IPAddress($row["ip"]);
-
 		$this->category = Category::GetById($row["catid"]);
 		$this->location = Location::GetById($row["locationid"]);
 		$this->type = Type::GetById($row["typeid"]);
@@ -146,6 +145,8 @@ class Entry extends BaseObject
 
 	public function AddToExport($export)
 	{
+		AuditHandler::FireEvent(__METHOD__,array('param-id'=>$this->id, 'param-exportid'=>$export));
+
 		$exportQuery = "INSERT INTO entry2export (dataid,exportid) VALUES (:dataid, :exportid)";
 		$exportStmt = Database::current()->prepare($exportQuery);
 		$exportStmt->bindValue('dataid',$this->id);
@@ -187,10 +188,29 @@ class Entry extends BaseObject
 	{
 		AuditHandler::FireEvent(__METHOD__,array('param-locationid'=>$_locationid, 'param-categoryid'=>$_categoryid));
 
-		$loadQuery = "SELECT id FROM ".$this->tablename ." WHERE locationid=:locationid AND catid=:catid";
+		$loadQuery = "SELECT id FROM entries WHERE locationid=:locationid AND catid=:categoryid";
 		$loadStmt = Database::current()->prepare($loadQuery);
 		$loadStmt->bindValue('locationid',$_locationid);
 		$loadStmt->bindValue('categoryid',$_categoryid);
+		$loadStmt->execute();
+
+		$objects = array();
+		while($row = $loadStmt->fetch())
+		{
+			$object = new Entry();
+			$object->LoadByID($row["id"]);
+			$objects[] = $object;
+		}
+		return $objects;
+	}
+
+	public static function GetByLocationId($_locationid)
+	{
+		AuditHandler::FireEvent(__METHOD__,array('param-locationid'=>$_locationid));
+
+		$loadQuery = "SELECT id FROM ".$this->tablename ." WHERE locationid=:locationid";
+		$loadStmt = Database::current()->prepare($loadQuery);
+		$loadStmt->bindValue('locationid',$_locationid);
 		$loadStmt->execute();
 
 		$objects = array();

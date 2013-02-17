@@ -1,6 +1,6 @@
 <?php
 /**
- * Project:     IPSmith - Free ip address managing tool
+ * Project:	 IPSmith - Free ip address managing tool
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,79 +24,48 @@
 
 if(isset($_REQUEST["submit"]))
 {
-    $LogHandler->Log("USER-LOGIN ", IPSMITH_INFO, array('request'=>$_REQUEST));
-    $q = "SELECT * FROM users WHERE username= :username AND password = :password ";
+	$LogHandler->Log("USER-LOGIN ", IPSMITH_INFO, array('request'=>$_REQUEST));
 
-    $stmt = $doctrineConnection->prepare($q);
+	$user = User::GetByUsernameAndPassword($_REQUEST["username"],$_REQUEST["password"]);
+	if($user->IsValid() && (PermissionManager::HasPermission($user->id,'can_login') && PermissionManager::HasPermission($user->id,'can_login_web')))
+	{
+		$user->PublishToSession();
+		$user->PublishConfigToSession();
 
-    $stmt->bindValue('username',$_REQUEST["username"]);
-    $stmt->bindValue('password',userHashPassword($_REQUEST["password"]));
+		foreach($defaultconfig["defaultsettings"] as $key => $value)
+		{
+			if(!isset($user->configarray[$key]))
+			{
+				$userSetting = new UserSetting();
+				$userSetting->settingsname = $key;
+				$userSetting->settingsvalue = $value;
+				$userSetting->userid = $user->id;
+				$userSetting->Save();
 
-    $stmt->execute();
+				$dbUserSettings[$key] = $value;
+				$_SESSION["userdata"]["config"][$key] = $value;
+			}
+		}
 
-    $globallocations = array();
+		$LogHandler->Log("USER-LOGIN New Session-data", IPSMITH_INFO, array('user-data'=>$userRow,  'data-session'=>$_SESSION));
+		@header("Location: ".$config["baseurl"]."/?from=login");
+	}
+	else
+	{
+		if(!$user->IsValid())
+		{
+			$LogHandler->Log("USER-LOGIN-FAILED wrong credentials", IPSMITH_INFO, array('request'=>$_REQUEST));
+			PumpMessage('error','Sie haben die Falschen Zugangsdaten angegeben.');
+		}
+		else
+		{
+			$LogHandler->Log("USER-LOGIN-FAILED missing permissions", IPSMITH_INFO, array('request'=>$_REQUEST));
+			PumpMessage('error','Sie können sich momentan nicht anmelden.');
+		}
 
-    if($userRow = $stmt->fetch())
-    {
-        session_destroy();
-        session_start();
-        $_SESSION["userdata"] = $userRow;
-        $LogHandler->Log("USER-LOGIN-SUCCESSFULL ", IPSMITH_INFO, array('request'=>$_REQUEST, 'data-retrieved'=>$userRow));
-
-        if(PermissionManager::HasPermission($userRow["id"],'can_login') && PermissionManager::HasPermission($userRow["id"],'can_login_web'))
-        {
-
-            $dbUserSettings = array();
-            $selectSettingsQuery = "SELECT * FROM user_settings WHERE userid= :userid";
-            $settingsStmt = $doctrineConnection->prepare($selectSettingsQuery);
-
-            $settingsStmt->bindValue('userid',$userRow["id"]);
-
-            $settingsStmt->execute();
-            $_SESSION["userdata"]["config"] = null;
-            while($settingsRow = $settingsStmt->fetch())
-            {
-
-                $dbUserSettings[$settingsRow["settingsname"]] = $settingsRow["settingsvalue"];
-            }
-
-            $LogHandler->Log("USER-LOGIN Fetched Settings", IPSMITH_INFO, array('request'=>$_REQUEST,  'user-data'=>$userRow,  'data-built'=>$dbUserSettings));
-
-            foreach($defaultconfig["defaultsettings"] as $key => $value)
-            {
-                if(!isset($dbUserSettings[$key]))
-                {
-                    $settingsUpdaterQuery = "INSERT INTO user_settings (userid,settingsname,settingsvalue,createdby) VALUES ( :userid, :settingsname, :settingsvalue, :createdby );";
-                    $settingsUpdaterStmt = $doctrineConnection->prepare($settingsUpdaterQuery);
-
-                    $settingsUpdaterStmt->bindValue('userid',$userRow["id"]);
-                    $settingsUpdaterStmt->bindValue('settingsname', $key);
-                    $settingsUpdaterStmt->bindValue('settingsvalue', $value);
-                    $settingsUpdaterStmt->bindValue('createdby', 'loginprocedure');
-                    $settingsUpdaterStmt->execute();
-
-                    $dbUserSettings[$key] = $value;
-                }
-            }
-
-            $LogHandler->Log("USER-LOGIN Pumping Settings", IPSMITH_INFO, array('request'=>$_REQUEST,  'user-data'=>$userRow,  'data-pump'=>$dbUserSettings));
-            $_SESSION["userdata"]["config"] = $dbUserSettings;
-            $LogHandler->Log("USER-LOGIN New Session-data", IPSMITH_INFO, array('user-data'=>$userRow,  'data-session'=>$_SESSION));
-            @header("Location: ".$config["baseurl"]."/?from=login");
-        }
-        else
-        {
-            session_destroy();
-            PermissionManager::SetDefaultSession();
-            $LogHandler->Log("USER-LOGIN-FAILED missing permissions", IPSMITH_INFO, array('request'=>$_REQUEST, 'data-retrieved'=>$userRow));
-            PumpMessage('error','Sie können sich momentan nicht anmelden.');
-        }
-    }
-    else
-    {
-        $LogHandler->Log("USER-LOGIN-FAILED wrong credentials", IPSMITH_INFO, array('request'=>$_REQUEST));
-        PumpMessage('error','Sie haben die Falschen Zugangsdaten angegeben.');
-    }
+		session_destroy();
+		PermissionManager::SetDefaultSession();
+	}
 }
 
 SetTitle('Anmelden');
