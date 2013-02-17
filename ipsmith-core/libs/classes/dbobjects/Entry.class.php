@@ -136,6 +136,8 @@ class Entry extends BaseObject
 
 	public function RemoveFromExports()
 	{
+		AuditHandler::FireEvent(__METHOD__,array('param-id'=>$this->id));
+
 		$deleteAssignmentQuery = 'DELETE FROM entry2export WHERE dataid=:dataid ;';
 	    $deleteAssignmentStmt = Database::current()->prepare($deleteAssignmentQuery);
 	    $deleteAssignmentStmt->bindValue('dataid',$this->id);
@@ -145,10 +147,22 @@ class Entry extends BaseObject
 	public function AddToExport($export)
 	{
 		$exportQuery = "INSERT INTO entry2export (dataid,exportid) VALUES (:dataid, :exportid)";
-		$exportStmt = Database::current()->prepare($deleteAssignmentQuery);
+		$exportStmt = Database::current()->prepare($exportQuery);
 		$exportStmt->bindValue('dataid',$this->id);
 		$exportStmt->bindValue('exportid',$export);
 		$exportStmt->execute();
+	}
+
+	public function Delete()
+	{
+		AuditHandler::FireEvent(__METHOD__,array('param-id'=>$this->id));
+
+		$this->RemoveFromExports();
+
+		$deleteQuery = "DELETE FROM entries WHERE id=:id";
+		$deleteStmt = Database::current()->prepare($deleteQuery);
+		$deleteStmt->bindValue('id',$this->id);
+		$deleteStmt->execute();
 	}
 
 	public static function LoadAll()
