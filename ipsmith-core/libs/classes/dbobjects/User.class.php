@@ -36,6 +36,8 @@ class User extends BaseObject
 	public $configarray = array();
 
 	public $config = null;
+	public $roles = null;
+	public $rolesarray = array();
 
 	public function Save()
 	{
@@ -111,7 +113,7 @@ class User extends BaseObject
           $this->newpassword = null;
           $this->LoadById($this->id);
 	}
-	public function LoadAll()
+	public static function GetAll()
 	{
 		$loadQuery = "SELECT id FROM users ORDER BY username";
 		$loadStmt = Database::current()->prepare($loadQuery);
@@ -190,15 +192,11 @@ class User extends BaseObject
 		$object->LoadById($_id);
 		return $object;
 	}
-	public static function GetAll()
-	{
-		AuditHandler::FireEvent(__METHOD__,null);
-		return self::LoadAll();
-	}
+
 
 	public static function IsFree($_username)
 	{
-		$user = self::GetByUsername($_username);
+		$user = User::GetByUsername($_username);
 		return (!$user->isValid());
 	}
 
@@ -221,6 +219,42 @@ class User extends BaseObject
 			$this->configarray[$setting->settingsname] = $setting->settingsvalue;
 		}
 
+		$selectRolesQuery = 'SELECT rolename, role_humanname FROM VIEW_users_roles WHERE userid= :userid ORDER BY rolename';
+		$selectRolesStmt = Database::current()->prepare($selectRolesQuery);
+		$selectRolesStmt->bindValue('userid',$row["id"]);
+		$selectRolesStmt->execute();
+		$i = 0;
+		while($selectRolesRow = $selectRolesStmt->fetch())
+		{
+			$this->rolesarray[] = $selectRolesRow;
+			if($i>0)
+			{
+				$this->roles.=", ";
+			}
+
+			if(trim($selectRolesRow["role_humanname"])=="")
+			{
+				$this->roles.=$selectRolesRow["rolename"];
+			}
+			else
+			{
+				$this->roles.= $selectRolesRow["role_humanname"];
+			}
+			$i++;
+			}
+
 		$this->row = $row;
 	}
+
+    public static function Count()
+    {
+        $countQuery = "SELECT count(id) as count FROM users";
+        $countStmt = Database::current()->query($countQuery);
+        if($row = $countStmt->fetch())
+        {
+            return $row["count"];
+        }
+        return 0;
+    }
+
 }

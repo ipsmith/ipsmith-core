@@ -108,11 +108,11 @@ class Type extends BaseObject
 	    }
 	}
 
-	public static function LoadAll()
+	public static function GetAll()
 	{
 		AuditHandler::FireEvent(__METHOD__,null);
 
-		$loadQuery = "SELECT id FROM ".$this->tablename." ORDER BY ordernumber";
+		$loadQuery = "SELECT id FROM types";
 		$loadStmt = Database::current()->prepare($loadQuery);
 		$loadStmt->execute();
 
@@ -124,11 +124,6 @@ class Type extends BaseObject
 	    	$objects[] = $object;
 	    }
 	    return $objects;
-	}
-
-	public static function GetAll()
-	{
-		return self::LoadAll();
 	}
 
 	public static function GetById($_id)

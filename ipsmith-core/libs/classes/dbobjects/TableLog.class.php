@@ -90,9 +90,11 @@ class TableLog extends BaseObject
 	    }
 	}
 
-	public function LoadByTableNameAndTableId($_tablename,$_id)
+	public static function GetByTableNameAndId($_tablename,$_id)
 	{
-		$loadQuery = "SELECT * FROM tablelog WHERE tableid=:tableid AND objecttablename=:objecttablename";
+		AuditHandler::FireEvent(__METHOD__,array("param-id"=>$_id, "param-tablename"=>$_tablename));
+
+		$loadQuery = "SELECT * FROM tablelog WHERE tableid=:tableid AND objecttablename=:objecttablename ORDER BY id DESC";
 		$loadStmt = Database::current()->prepare($loadQuery);
           $loadStmt->bindValue('tableid',$_id);
           $loadStmt->bindValue('objecttablename',$_tablename);
@@ -107,9 +109,5 @@ class TableLog extends BaseObject
 	    return $objects;
 	}
 
-	public static function GetByTableNameAndId($_tablename,$_id)
-	{
-		return self::LoadByTableNameAndTableId($_tablename, $_id);
-	}
 
 }

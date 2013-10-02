@@ -23,7 +23,6 @@
         {if $smarty.session.userdata.config.displayids eq "1"}
             <th>IP-Typ</th>
         {/if}
-        <th>&nbsp;</th>
         <th>IP</th>
         <th>Hostname</th>
         <th>MAC</th>
@@ -43,13 +42,13 @@
         {if $smarty.session.userdata.config.displayids eq "1"}
             <td>{$entry->id}</td>
         {/if}
-
         <td>{include file="list/_pingresult.tpl" myentry=$entry}</td>
-        <td><span class="label {if $entry->address->IPType eq "IPv6"}label-success{/if}">{$entry->address->IPType}</span></td>
+        {if $smarty.session.userdata.config.displayids eq "1"}
+            <td><span class="label {if $entry->address->IPType eq "IPv6"}label-success{/if}">{$entry->address->IPType}</span></td>
+        {/if}
         <td>{$entry->address->IP}</td>
         <td>{$entry->hostname}</td>
-        <td>{$entry->macaddress
-        }</td>
+        <td>{$entry->macaddress}</td>
         <td>{if $entry->iconpath neq ""}<img src="{$entry->iconpath}" alt="" title="" />{else}&nbsp;{/if}</td>
         <td>{include file="list/_typeinfo.tpl"}</td>
         <td>{include file="list/_editbutton.tpl"}</td>

@@ -1,1 +1,1 @@
-<a href="{$config.baseurl}/admin/users/edit.html?id={$data.id}">Bearbeiten</a>
+<a href="{$config.baseurl}/admin/users/edit.html?id={$entry->id}">Bearbeiten</a>

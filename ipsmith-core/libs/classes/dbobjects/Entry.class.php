@@ -55,7 +55,7 @@ class Entry extends BaseObject
 
 		if($this->IsValid())
 		{
-			$saveQuery = "UPDATE ".$this->tablename." SET ip=:ip, ipnum=:ipnum, macaddress=:macaddress, hostname=:hostname, fqdn=:fqdn, addressrecord=:addressrecord, iptype=:iptype, color_hex=:color_hex, color_r=:color_r, color_g=:color_g, color_b=:color_b, iconpath=:iconpath, locationid=:locationid. catid=:catid, typeid=:typeid WHERE id=:id;";
+			$saveQuery = "UPDATE ".$this->tablename." SET ip=:ip, ipnum=:ipnum, macaddress=:macaddress, hostname=:hostname, fqdn=:fqdn, addressrecord=:addressrecord, iptype=:iptype, color_hex=:color_hex, color_r=:color_r, color_g=:color_g, color_b=:color_b, iconpath=:iconpath, locationid=:locationid, catid=:catid, typeid=:typeid WHERE id=:id;";
 			$saveStmt = Database::current()->prepare($saveQuery);
 			$saveStmt->bindValue('id',$this->id);
 		}
@@ -67,6 +67,7 @@ class Entry extends BaseObject
 
 		$saveStmt->bindValue('ip',$this->ip);
 		$saveStmt->bindValue('ipnum',$address->DECIMAL);
+		$saveStmt->bindValue('fqdn',$this->fqdn);
 		$saveStmt->bindValue('macaddress',$this->macaddress);
 		$saveStmt->bindValue('hostname',$this->hostname);
 		$saveStmt->bindValue('addressrecord',$address->AddressRecord);
@@ -86,7 +87,7 @@ class Entry extends BaseObject
 			$this->id = Database::current()->lastInsertId();
 		}
 
-        $this->SaveMetaData($this->tablename, $this->id,$isupdate);
+		$this->SaveMetaData($this->tablename, $this->id,$isupdate);
 		$this->LoadById($this->id);
 	}
 
@@ -127,10 +128,10 @@ class Entry extends BaseObject
 		$loadStmt->bindValue('id',$_id);
 		$loadStmt->execute();
 
-	    if($row = $loadStmt->fetch())
-	    {
-    		$this->LoadData($row);
-	    }
+		if($row = $loadStmt->fetch())
+		{
+			$this->LoadData($row);
+		}
 	}
 
 	public function RemoveFromExports()
@@ -138,20 +139,25 @@ class Entry extends BaseObject
 		AuditHandler::FireEvent(__METHOD__,array('param-id'=>$this->id));
 
 		$deleteAssignmentQuery = 'DELETE FROM entry2export WHERE dataid=:dataid ;';
-	    $deleteAssignmentStmt = Database::current()->prepare($deleteAssignmentQuery);
-	    $deleteAssignmentStmt->bindValue('dataid',$this->id);
-	    $deleteAssignmentStmt->execute();
+		$deleteAssignmentStmt = Database::current()->prepare($deleteAssignmentQuery);
+		$deleteAssignmentStmt->bindValue('dataid',$this->id);
+		$deleteAssignmentStmt->execute();
 	}
 
-	public function AddToExport($export)
+	public function AddToExports($exports=array())
 	{
-		AuditHandler::FireEvent(__METHOD__,array('param-id'=>$this->id, 'param-exportid'=>$export));
-
 		$exportQuery = "INSERT INTO entry2export (dataid,exportid) VALUES (:dataid, :exportid)";
 		$exportStmt = Database::current()->prepare($exportQuery);
-		$exportStmt->bindValue('dataid',$this->id);
-		$exportStmt->bindValue('exportid',$export);
-		$exportStmt->execute();
+
+
+		foreach($exports as $export)
+		{
+			AuditHandler::FireEvent(__METHOD__,array('param-id'=>$this->id, 'param-exportid'=>$export));
+
+			$exportStmt->bindValue('dataid',$this->id);
+			$exportStmt->bindValue('exportid',$export);
+			$exportStmt->execute();
+		}
 	}
 
 	public function Delete()
@@ -184,6 +190,17 @@ class Entry extends BaseObject
 		return $objects;
 	}
 
+    public static function Count()
+    {
+        $countQuery = "SELECT count(id) as count FROM entries";
+        $countStmt = Database::current()->query($countQuery);
+        if($row = $countStmt->fetch())
+        {
+            return $row["count"];
+        }
+        return 0;
+    }
+
 	public static function GetByLocationAndCategory($_locationid, $_categoryid)
 	{
 		AuditHandler::FireEvent(__METHOD__,array('param-locationid'=>$_locationid, 'param-categoryid'=>$_categoryid));
@@ -208,7 +225,7 @@ class Entry extends BaseObject
 	{
 		AuditHandler::FireEvent(__METHOD__,array('param-locationid'=>$_locationid));
 
-		$loadQuery = "SELECT id FROM ".$this->tablename ." WHERE locationid=:locationid";
+		$loadQuery = "SELECT id FROM entries WHERE locationid=:locationid";
 		$loadStmt = Database::current()->prepare($loadQuery);
 		$loadStmt->bindValue('locationid',$_locationid);
 		$loadStmt->execute();

@@ -1,15 +1,15 @@
 <h2>{$currentitemname} bearbeiten</h2>
 
-<form method="POST" action="{$config.baseurl}/item/edithost.html">
-    {if isset($currententry.id)}
-    <input type="hidden" id="entry_id" name="entry_id" value="{$currententry.id}" />
+<form method="POST" action="{$config.baseurl}/item/edithost.html" id="entryeditform">
+    {if isset($currententry->id)}
+    <input type="hidden" id="entry_id" name="entry_id" value="{$currententry->id}" />
     {/if}
 <div class="tabbable">
     <ul class="nav nav-tabs">
         <li class="active"><a href="#itemgeneric" data-toggle="tab">Allgemein</a> </li>
         <li><a href="#itemcat" data-toggle="tab">Kategorisierung</a> </li>
         <li><a href="#itemexport" data-toggle="tab">Export-Einstellungen</a> </li>
-        <li><a href="#itemlog" data-toggle="tab">Protokoll</a></li>
+        <li><a href="#tablelog" data-toggle="tab">Protokoll</a></li>
         <li><a href="#iteminfo" data-toggle="tab">Datensatz-Informationen</a></li>
     </ul>
 
@@ -22,13 +22,10 @@
                     <select name="entry_exports[]"
                             id="entry_exports"
                             size="6"
-                            multiple="true">
+                            multiple="true"
+                            class="span12" >
                         {foreach $selectedexports as $export}
-                            <option title="{$export.exportname}"
-                                    rel="{$export.id}"
-                                    value="{$export.id}">
-                                    {$export.exportname}
-                            </option>
+                            <option title="{$export->exportname}" rel="{$export->id}" value="{$export->id}" selected>{$export->exportname}</option>
                         {/foreach}
                     </select>
                 </div>
@@ -55,20 +52,26 @@
                            $('#exportremove').click(function() {
                             return !$('#entry_exports option:selected').remove().appendTo('#exportavailable');
                            });
+                               $('#submit').click(function(){
+        $('#entry_exports option').attr('selected',true);
+         $('#entryeditform').submit();
+
+    });
                           });
-                        </script>
+                          </Script>
                 </div>
 
                 <div class="span3">
                         <select name="exportavailable[]"
                                 id="exportavailable"
                                 size="6"
-                                multiple="multiple">
+                                multiple="multiple"
+                            class="span12">
                                 {foreach $availableexports as $export}
-                                    <option title="{$export.exportname}"
-                                            rel="{$export.id}"
-                                            value="{$export.id}">
-                                            {$export.exportname}
+                                    <option title="{$export->exportname}"
+                                            rel="{$export->id}"
+                                            value="{$export->id}">
+                                            {$export->exportname}
                                     </option>
                                 {/foreach}
                         </select>
@@ -83,11 +86,11 @@
                         <select id="entry_location"
                                 name="entry_location" >
                                 {foreach $globallocations as $location}
-                                    <option  value="{$location.id}"
-                                            {if $location.id eq $currententry.locationid}
+                                    <option  value="{$location->id}"
+                                            {if $location->id eq $currententry->locationid}
                                             selected
                                             {/if}>
-                                            {$location.humanname}
+                                            {$location->humanname}
                                     </option>
                                 {/foreach}
                         </select>
@@ -98,7 +101,7 @@
                     <td>
                         <select id="entry_cat" name="entry_cat" >
                         {foreach $cats as $cat}
-                            <option  value="{$cat.id}" {if $cat.id eq $currententry.catid}selected{/if}>{$cat.catname}</option>
+                            <option  value="{$cat->id}" {if $cat->id eq $currententry->catid}selected{/if}>{$cat->catname}</option>
                         {/foreach}
                         </select>
                     </td>
@@ -108,7 +111,7 @@
                     <td>
                         <select id="entry_type" name="entry_type" >
                         {foreach $types as $type}
-                            <option  value="{$type.id}" {if $type.id eq $currententry.typeid}selected{/if}>{$type.typename}</option>
+                            <option  value="{$type->id}" {if $type->id eq $currententry->typeid}selected{/if}>{$type->typename}</option>
                         {/foreach}
                         </select>
                     </td>
@@ -120,7 +123,7 @@
                         {foreach $icons as $icon}
                             <option style="background:url({$icon.path})  left top no-repeat #fff;padding-left:20px; "
                                     value="{$icon.path}" data-imagesrc="{$icon.path}"
-                                    {if $currententry.iconpath neq "" && $currententry.iconpath eq $icon.path}selected{/if}>
+                                    {if $currententry->iconpath neq "" && $currententry->iconpath eq $icon.path}selected{/if}>
                                     {$icon.name}
                             </option>
                         {/foreach}
@@ -136,7 +139,7 @@
                     <th  class="span3">MAC-Adresse:</th>
                     <td>
                         <div class="input-append">
-                        <input type="text" id="entry_mac" name="entry_mac" value="{if isset($currententry.macaddress)}{$currententry.macaddress}{/if}" placeholder="00:00:00:00:00:00" class="span3" style="text-transform:capitalize; ">
+                        <input type="text" id="entry_mac" name="entry_mac" value="{if isset($currententry->macaddress)}{$currententry->macaddress}{/if}" placeholder="00:00:00:00:00:00" class="span3" style="text-transform:capitalize; ">
                         <span class="add-on">
                              <a data-original-title="Hinweis"
                                 href="#"
@@ -151,13 +154,13 @@
                 </tr>
                 <tr>
                     <th>IP-Adresse:</th>
-                    <td><input type="text" id="entry_ip" name="entry_ip" value="{if isset($currententry.ip)}{$currententry.ip}{/if}" placeholder="127.0.0.1"  class="span3"></td>
+                    <td><input type="text" id="entry_ip" name="entry_ip" value="{if isset($currententry->ip)}{$currententry->ip}{/if}" placeholder="127.0.0.1"  class="span3"></td>
                 </tr>
                 <tr>
                     <th>Primärer Host-Name:</th>
                     <td>
                         <div class="input-append">
-                        <input type="text" id="entry_hostname" name="entry_hostname" value="{if isset($currententry.hostname)}{$currententry.hostname}{/if}" placeholder="localhost"  class="span3">
+                        <input type="text" id="entry_hostname" name="entry_hostname" value="{if isset($currententry->hostname)}{$currententry->hostname}{/if}" placeholder="localhost"  class="span3">
                         <span class="add-on">
                              <a data-original-title="Hinweis" href="#"  rel="popover" data-placement="right" data-content="Sie können später weitere Hostnamen hinzufügen. Bitte tragen Sie hier <strong>keinen</strong> Fully Qualified Domain Name (FQDN) ein."><i class="icon-question-sign"></i></a>
                         </span>
@@ -168,17 +171,17 @@
                     <th>Darstellung in Listen:</th>
                     <td>
                         <div class="input-append color"
-                             data-color="rgb({if isset($currententry.color_r)}{$currententry.color_r}{else}0{/if}, {if isset($currententry.color_g)}{$currententry.color_g}{else}0{/if}, {if isset($currententry.color_b)}{$currententry.color_b}{else}0{/if})"
+                             data-color="rgb({if isset($currententry->color_r)}{$currententry->color_r}{else}0{/if}, {if isset($currententry->color_g)}{$currententry->color_g}{else}0{/if}, {if isset($currententry->color_b)}{$currententry->color_b}{else}0{/if})"
                              data-color-format="hex"
                              id="cp3">
                         <input class="span3"
-                               value="{if isset($currententry.color_hex)}{$currententry.color_hex}{/if}"
+                               value="{if isset($currententry->color_hex)}{$currententry->color_hex}{/if}"
                                readonly=""
                                type="text"
                                id="entry_color_hex"
                                name="entry_color_hex">
                         <span class="add-on">
-                            <i style="background-color: {if isset($currententry.color)}{$currententry.color}{else}#000000{/if}"></i>
+                            <i style="background-color: {if isset($currententry->color)}{$currententry->color}{else}#000000{/if}"></i>
                         </span>
             </div>
                     </td>
@@ -187,7 +190,7 @@
 
             </table>
         </div>
-        <div class="tab-pane" id="itemlog">
+        <div class="tab-pane" id="tablelog">
             <table class="table table-striped">
                 <tr>
                     <th class="span1">#ID</th>
@@ -198,10 +201,10 @@
                 {if isset($logentries)}
                     {foreach $logentries as $log}
                         <tr>
-                            <td>{$log.id}</td>
-                            <td>{$log.username}</td>
-                            <td>{$log.action}</td>
-                            <td>{$log.datecreated}</td>
+                            <td>{$log->id}</td>
+                            <td>{$log->username}</td>
+                            <td>{$log->action}</td>
+                            <td>{$log->createdat}</td>
                         </tr>
                     {/foreach}
                 {else}
@@ -218,28 +221,28 @@
             <table class="table table-striped ipsmith">
                 <tr>
                     <th class="span3">ID:</th>
-                    <td>{if isset($currententry.id)}{$currententry.id}{else}-{/if}</td>
+                    <td>{if isset($currententry->id)}{$currententry->id}{else}-{/if}</td>
                 </tr>
                 <tr>
                     <th>Guid:</th>
-                    <td>{if isset($currententry.guid)}{$currententry.guid}{else}-{/if}</td>
+                    <td>{if isset($currententry->guid)}{$currententry->guid}{else}-{/if}</td>
                 </tr>
 
                 <tr>
                     <th>Erstellt:</th>
-                    <td>{if isset($currententry.createdat)}{$currententry.createdat}{else}-{/if}</td>
+                    <td>{if isset($currententry->createdat)}{$currententry->createdat}{else}-{/if}</td>
                 </tr>
                 <tr>
                     <th>Erstellt von:</th>
-                    <td>{if isset($currententry.createdby)}{$currententry.createdby}{else}-{/if}</td>
+                    <td>{if isset($currententry->createdby)}{$currententry->createdby}{else}-{/if}</td>
                 </tr>
                 <tr>
                     <th>Bearbeitet:</th>
-                    <td>{if isset($currententry.updatedat)}{$currententry.updatedat}{else}-{/if}</td>
+                    <td>{if isset($currententry->updatedat)}{$currententry->updatedat}{else}-{/if}</td>
                 </tr>
                 <tr>
                     <th>Bearbeitet von:</th>
-                    <td>{if isset($currententry.updatedby)}{$currententry.updatedby}{else}-{/if}</td>
+                    <td>{if isset($currententry->updatedby)}{$currententry->updatedby}{else}-{/if}</td>
                 </tr>
 
 </table>

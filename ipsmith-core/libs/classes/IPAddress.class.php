@@ -67,18 +67,18 @@ class IPAddress
         }
 
         // IPv6 address
-        if (strpos($ip_address, ':') !== false) {
+        if (strpos($ip_address, ':') !== false)
+        {
             $network = inet_pton($ip_address);
             $parts = unpack('N*', $network);
 
-            foreach ($parts as &$part) {
-                if ($part < 0) {
+            foreach ($parts as &$part)
+            {
+                if ($part < 0)
                     $part = bcadd((string) $part, '4294967296');
-                }
 
-                if (!is_string($part)) {
+                if (!is_string($part))
                     $part = (string) $part;
-                }
             }
 
             $decimal = $parts[4];
@@ -86,6 +86,7 @@ class IPAddress
             $decimal = bcadd($decimal, bcmul($parts[2], '18446744073709551616'));
             $decimal = bcadd($decimal, bcmul($parts[1], '79228162514264337593543950336'));
 
+            $decimal = str_replace(substr(strrchr($decimal, "."), 0),null,$decimal);
             return $decimal;
         }
 
@@ -129,9 +130,9 @@ class IPAddress
         $ip_address = inet_ntop($network);
 
         // Turn IPv6 to IPv4 if it's IPv4
-        if (preg_match('/^::\d+.\d+.\d+.\d+$/', $ip_address)) {
+        if (preg_match('/^::\d+.\d+.\d+.\d+$/', $ip_address))
             return substr($ip_address, 2);
-        }
+
 
         return $ip_address;
     }

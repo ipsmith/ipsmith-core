@@ -37,21 +37,24 @@ class BaseObject
 
 	public function LoadMetaData($metaRow)
 	{
-		$this->id = $metaRow["id"];
-		if(isset($metaRow["guid"]) && $metaRow["guid"]!=null)
-			$this->guid = $metaRow["guid"];
+		if(isset($metaRow["id"]))
+		{
+			$this->id = $metaRow["id"];
+			if(isset($metaRow["guid"]) && $metaRow["guid"]!=null)
+				$this->guid = $metaRow["guid"];
 
-		if(isset($metaRow["createdat"]) && $metaRow["createdat"]!=null)
-			$this->createdat = $metaRow["createdat"];
+			if(isset($metaRow["createdat"]) && $metaRow["createdat"]!=null)
+				$this->createdat = $metaRow["createdat"];
 
-		if(isset($metaRow["createdby"]) && $metaRow["createdby"]!=null)
-			$this->createdby = $metaRow["createdby"];
+			if(isset($metaRow["createdby"]) && $metaRow["createdby"]!=null)
+				$this->createdby = $metaRow["createdby"];
 
-		if(isset($metaRow["modifiedat"]) && $metaRow["modifiedat"]!=null)
-			$this->modifiedat = $metaRow["modifiedat"];
+			if(isset($metaRow["modifiedat"]) && $metaRow["modifiedat"]!=null)
+				$this->modifiedat = $metaRow["modifiedat"];
 
-		if(isset($metaRow["modifiedby"]) && $metaRow["modifiedby"]!=null)
-			$this->modifiedby = $metaRow["modifiedby"];
+			if(isset($metaRow["modifiedby"]) && $metaRow["modifiedby"]!=null)
+				$this->modifiedby = $metaRow["modifiedby"];
+		}
 	}
 
 	public function SaveTableLog($_tablename, $_id, $_isupdate)

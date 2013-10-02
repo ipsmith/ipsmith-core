@@ -51,21 +51,8 @@ else
 }
 
 
-$q = "SELECT count(id) as count FROM entries";
-$stmt = $doctrineConnection->query($q);
-$globallocations = array();
-if($row = $stmt->fetch())
-{
-    $system["entries"] = $row["count"];
-}
-
-$q = "SELECT count(id) as count FROM users";
-$stmt = $doctrineConnection->query($q);
-$globallocations = array();
-if($row = $stmt->fetch())
-{
-        $system["users"] = $row["count"];
-}
+    $system["entries"] = Entry::Count();
+    $system["users"] = User::Count();
 
 
 $smarty->assign('system',$system);

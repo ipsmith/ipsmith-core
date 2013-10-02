@@ -89,7 +89,7 @@ class Category extends BaseObject
 	}
 	public static function LoadAll()
 	{
-		AuditHandler::FireEvent(__METHOD__,array("param-id"=>$_id));
+		AuditHandler::FireEvent(__METHOD__,array());
 
 		$loadQuery = "SELECT id FROM categories ORDER BY ordernumber";
 		$loadStmt = Database::current()->prepare($loadQuery);

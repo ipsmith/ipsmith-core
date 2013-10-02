@@ -18,45 +18,10 @@
  * or see http://www.ipsmith.org/docs/license
  *
  * For questions, help, comments, discussion, etc., please join the
- * IPSmith mailing list. Go to http://www.ipsmith.org/lists 
+ * IPSmith mailing list. Go to http://www.ipsmith.org/lists
  *
- **/    
+ **/
 
 $entries= array();
-$selectUsersQuery = 'SELECT * FROM users ORDER BY username';
-$selectUsersStmt = $doctrineConnection->prepare($selectUsersQuery);
-$selectUsersStmt->execute();
-
-$selectRolesQuery = 'SELECT rolename, role_humanname FROM VIEW_users_roles WHERE userid= :userid ORDER BY rolename';
-$selectRolesStmt = $doctrineConnection->prepare($selectRolesQuery);
-
-while ($selectUsersRow = $selectUsersStmt->fetch())
-{
-    $selectUsersWorkerRow = $selectUsersRow;
-    $selectUsersWorkerRow["roles"] = null;
-
-    $selectRolesStmt->bindValue('userid',$selectUsersRow["id"]);
-    $selectRolesStmt->execute();
-
-    $i = 0;
-    while($selectRolesRow = $selectRolesStmt->fetch())
-    {
-        if($i>0) 
-        {
-            $selectUsersWorkerRow["roles"].=", ";
-        }
-
-        if(trim($selectRolesRow["role_humanname"])=="")
-        {
-             $selectUsersWorkerRow["roles"].=$selectRolesRow["rolename"];
-        }
-        else
-        {
-            $selectUsersWorkerRow["roles"].= $selectRolesRow["role_humanname"];
-        }
-        $i++;
-    }
-    $selectUsersWorkerRow["linkid"] = $selectUsersWorkerRow["id"];
-    $entries[] = $selectUsersWorkerRow;
-}
+$entries = User::GetAll();
 $smarty->assign('entries',$entries);
